@@ -27,7 +27,7 @@ preprocess_cytokine_data <- function(gs_nm = "gs_cytof_acs_nk",
                                      hladr = FALSE,
                                      hladr_bulk = FALSE,
 
-                                     label_cytokines = cytofacs::label_cytokines,
+                                     label_cytokines = PipelineDataACSCyTOF::label_cytokines,
 
                                      compass = TRUE,
                                      compass_stim = c('p1', 'mtb', 'ebv', 'p4'),
@@ -1130,7 +1130,7 @@ preprocess_cytokine_data <- function(gs_nm = "gs_cytof_acs_nk",
                 # ------------------------
 
                 print("getting per-cluster frequencies")
-                flowsom_freq <- cytofacs::get_fs_cluster_freq(
+                flowsom_freq <- get_fs_cluster_freq(
                   flowsom_out = flowsom_out,
                   dir_save_cluster_results = dir_save_cluster_results,
                   stats_combn_tbl = stats_combn_tbl,
@@ -1156,7 +1156,7 @@ preprocess_cytokine_data <- function(gs_nm = "gs_cytof_acs_nk",
                 #browser()
                 print("making plots")
 
-                if(flowsom_plot) cytofacs::plot_flowsom(
+                if(flowsom_plot) plot_flowsom(
                   flowsom_out = flowsom_out, stim = stim,
                   flowsom_freq = flowsom_freq,
                   flowsom_cluster_post_probs = flowsom_cluster_post_probs,

@@ -31,7 +31,7 @@ the TCRgd dataset.}
 
 \item{chnl_sel}{character vector. Channels to apply FlowSOM to.}
 
-\item{ds_name}{character. Name of dataset (as used to name datasets in output of cytofacs package).}
+\item{ds_name}{character. Name of dataset (as used to name datasets in output of data package).}
 
 \item{dir_save_base}{character. Base directory to save to.}
 

@@ -8,7 +8,7 @@
 #' the TCRgd dataset. 
 #' @param scale 'scale' or 'n_s'. If \code{scale}, then columns are centred and standardised. 
 #' @param chnl_sel character vector. Channels to apply FlowSOM to.  
-#' @param ds_name character. Name of dataset (as used to name datasets in output of cytofacs package). 
+#' @param ds_name character. Name of dataset (as used to name datasets in output of data package). 
 #' @param dir_save_base character. Base directory to save to. 
 #' @param jacc_n Number of bootstrapped samples to apply cluster algorithm to to calculate cluster stability. Default is 0. 
 #' @param jacc_reuse logical. If \code{TRUE}, then old data is reused if available. Default is \code{FALSE}.
