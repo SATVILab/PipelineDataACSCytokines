@@ -221,8 +221,13 @@ preprocess_cytokine_data <- function(gs_nm = "gs_cytof_acs_nk",
   params_env <- list(pop_gate = 'root', chnl_lab = chnl_lab, ind_in_batch_lab_vec = ind_in_batch_lab_vec,
                      ind_in_batch_gate = 1:5, data_name = gs_nm, fcs = fcs_vec_gs,
                      ind_in_batch_uns = 5, ind_batch_list = ind_batch_list, data = gs)
-  path_base <- outliergatev1:::.create_dir_base(params = params_env %>%
-                                                  append(list(cut = marker_list[[1]]$cut)))
+  path_base <- outliergatev1:::.create_dir_base(
+    params = params_env %>%
+      append(list(cut = marker_list[[1]]$cut)), 
+    dir_base_init = file.path(
+      here::here(), 
+      "datalarge"
+    ))
   path_base <- str_sub(path_base, end = - str_length(chnl_lab[marker_list[[1]]$cut]) - 2)
   path_cyt_combn_base <- file.path(path_base, paste0(purrr::map_chr(marker_list, function(x) x$cut), collapse = "_"))
   path_stats <- file.path(path_cyt_combn_base,  'tables', 'gate_stats.rds')
