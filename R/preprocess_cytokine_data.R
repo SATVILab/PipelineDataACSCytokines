@@ -705,7 +705,8 @@ preprocess_cytokine_data <- function(gs_nm = "gs_cytof_acs_nk",
       setNames(names(ex_ag_list))
 
     # load FI-tSNE
-    source(file.path(here::here(), "data-raw", 'fast_tsne.R'), chdir = T)
+    # system.file("extdata", "fast_tsne.R")
+    # source(file.path(here::here(), "data-raw", 'fast_tsne.R'), chdir = T)
     #exc_vec <- names(ex_ag_list); exc <- exc_vec[1]
 
     # run t-SNE plots
