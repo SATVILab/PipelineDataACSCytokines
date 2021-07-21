@@ -2,10 +2,11 @@
 % Please edit documentation in R/plot_flowsom_results.R
 \name{.plot_flowsom}
 \alias{.plot_flowsom}
-\title{Plot informative plots to assist cluster interpretation for an individual set of stimulations}
+\title{Plot FlowSOM results for individual stim}
 \usage{
 .plot_flowsom(
   flowsom_out,
+  path_flowsom_out,
   flowsom_freq,
   dir_save,
   chnl_lab,
@@ -15,14 +16,29 @@
 )
 }
 \arguments{
-\item{stim_plot}{character vector. Stimulations to plot. If 'uns' and other stimulations are also in flowsom_out$stim, then it will be plotted 
+\item{stim_plot}{character vector.
+Stimulations to plot.
+If "uns" and other stimulations are also in flowsom_out$stim,
+then it will be plotted
 where appropriate as well.}
 
-\item{cell_count_lab}{named numeric vector. Each name indicates sample id and stimulation (paste0(SubjectID, "_", VisitType, 
-"_", stim)), and each element is the number of classified cells for that combination of sample id and stimulation.}
+\item{cell_count_lab}{named numeric vector.
+Each name indicates sample id and stimulation
+(paste0(SubjectID, "_", VisitType,
+"_", stim)), and each element is the number of classified
+cells for that combination of sample id and stimulation.}
 
-\item{stim_clust}{character: 'all', 'all_u' or individual stim. Specifies stimulations that were used to cluster.}
+\item{stim_clust}{character: "all", "all_u" or individual stim.
+Specifies stimulations that were used to cluster.}
 }
 \description{
-Plot informative plots to assist cluster interpretation for an individual set of stimulations
+Plot FlowSOM results for individual stim
+
+Labelling vector for stimulations
+
+Labelling vector for stimulations
+
+Labelling vector for stimulations
+
+Labelling vector for stimulations when saving
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_flowsom_results.R
 \name{plot_flowsom}
 \alias{plot_flowsom}
-\title{Produce informative plots and results from a FlowSOM clustering for each stimulation combination}
+\title{Plot FlowSOM results}
 \usage{
 plot_flowsom(
   flowsom_out,
@@ -19,21 +19,31 @@ plot_flowsom(
 )
 }
 \arguments{
-\item{chnl_lab}{named character vector. If not \code{NULL}, channels are renamed to markers using it. 
-Default is \code{NULL}.}
+\item{chnl_lab}{named character vector.
+If not \code{NULL}, channels are renamed to markers using it.
+Default is \code{NULL}}
 
-\item{stats_combn_tbl}{dataframe. Contains total classified cells for each sample (SubjectID and VisitType) for
-each stimulation in a column called \code{n_cell_stim} and also has the total number of classified cells
-in the corresponding unstim sample in a column called \code{n_cell_uns}.}
+\item{stats_combn_tbl}{dataframe.
+Contains total classified cells for each sample
+(SubjectID and VisitType) for
+each stimulation in a column called \code{n_cell_stim}
+and also has the total number of classified cells
+in the corresponding unstim sample in a column
+called \code{n_cell_uns}.}
 
-\item{uns_chr}{character. Name for unstim in \code{stim_vec_u}. Default is "uns".}
+\item{uns_chr}{character.
+Name for unstim in \code{stim_vec_u}.
+Default is "uns".}
 
-\item{reuse, dir_save_cluster_results}{logical and character, respectively. If \code{reuse == TRUE} and \code{!is.null(dir_save_cluster_results)}, 
+\item{reuse, dir_save_cluster_results}{logical and character, respectively.
+If \code{reuse == TRUE} and \code{!is.null(dir_save_cluster_results)},
 then if flowsom_freq is the same as flowsom_freq found}
 
-\item{responders_list}{list. Output from \code{get_post_probs} function for the current combination 
-of excluded cytokine combinations, gate method and stimulation (all, all_u or a specific stim).}
+\item{responders_list}{list.
+Output from\code{get_post_probs} function for the current combination
+of excluded cytokine combinations, gate method and
+stimulation (all, all_u or a specific stim).}
 }
 \description{
-Produce informative plots and results from a FlowSOM clustering for each stimulation combination
+Plot FlowSOM results
 }

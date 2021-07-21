@@ -7,10 +7,14 @@
 plot_marker_density_by_cluster(flowsom_out, chnl_lab, dir_save, stim_plot)
 }
 \arguments{
-\item{stim_plot}{character: 'all', 'all_u', or individual stim. If 'all' or 'all_u', then 
-all cells in flowsom_out belonging to a particular cluster are plotted for that cluster, including unstim. 
-If an individual stim, then only cells belonging to that stim are plotted for that cluster. 
-When plotting non-cluster cells, all non-cluster cells are plotted regardless of the value for 
+\item{stim_plot}{character: "all", "all_u", or individual stim.
+If "all" or "all_u", then
+all cells in flowsom_out belonging to a particular cluster
+are plotted for that cluster, including unstim.
+If an individual stim, then only cells belonging
+to that stim are plotted for that cluster.
+When plotting non-cluster cells, all
+non-cluster cells are plotted regardless of the value for
 \code{stim_clust}.}
 }
 \description{
