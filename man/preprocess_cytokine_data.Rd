@@ -6,13 +6,14 @@
 \usage{
 preprocess_cytokine_data(
   gs_nm = "gs_cytof_acs_nk",
-  chnls = c("Ho165Di", "Gd158Di", "Nd146Di", "Dy164Di", "Gd156Di", "Nd150Di"),
+  chnls_gate = c("Ho165Di", "Gd158Di", "Nd146Di", "Dy164Di", "Gd156Di", "Nd150Di"),
+  chnls_analyse = "",
   gate = FALSE,
   fast = FALSE,
   stats_only = FALSE,
   plots_only = FALSE,
   save_cyt_pos_fcs = TRUE,
-  combn_exc_list = list(NULL, c("Nd146Di", "Gd156Di")),
+  combn_exc_list = list(NULL, c("Nd146Di", "Gd156Di", "Nd150Di")),
   hladr = FALSE,
   hladr_bulk = FALSE,
   label_cytokines = PipelineDataACSCyTOF::label_cytokines,

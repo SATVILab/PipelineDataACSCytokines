@@ -1,4 +1,4 @@
-#'
+#' @title Load cytokine-positive expression data for FlowSOM
 #' @description Loads flowSet for flowSOM, automatically filtering out non-responders (if desired), automatically 
 #' excluding files that didn't read in correctly and 
 #' 

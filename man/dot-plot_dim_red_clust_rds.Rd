@@ -5,7 +5,7 @@
 \title{Plot dim red view of data}
 \usage{
 .plot_dim_red_clust_rds(
-  flowsom_out = .data,
+  flowsom_out,
   stim_plot,
   clust,
   method,
