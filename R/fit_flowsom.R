@@ -34,12 +34,16 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
                   "n_f" = purrr::map_dbl(ds_name, function(x){
                     if(str_detect(ds_name, "cd4|cd8")) return(12)
                     if(str_detect(ds_name, "tcrgd")) return(7)
+                    if(str_detect(ds_name, "bcell")) return(6)
+                    if(str_detect(ds_name, "nk")) return(10)
                     12
                   }),
                   "n_f_f" = purrr::map_dbl(ds_name, function(x){
                     if(str_detect(ds_name, "cd4|cd8")) return(8)
                     if(str_detect(ds_name, "tcrgd")) return(5)
-                    12
+                    if(str_detect(ds_name, "nk")) return(6)
+                    if(str_detect(ds_name, "bcell")) return(3)
+                    8
                   }),
                   "n_meta" = NULL,
                   stop("n_clust value not either n_m or n_f or n_meta"))
