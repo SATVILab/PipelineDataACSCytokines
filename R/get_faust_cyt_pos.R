@@ -1,15 +1,11 @@
 get_faust_cyt_pos <- function(dir_faust,
+                              dir_save,
                               pop_to_defn, # pop_list
                               pop_to_gate, # pop_to_gate_tbl
                               chnl, 
                               force = FALSE) {
-  
-  dir_cyt <- file.path(
-    dir_faust, 
-    "cytData"
-  )
-  
-  if (!dir.exists(dir_cyt)) dir.create(dir_cyt)
+
+  if (!dir.exists(dir_save)) dir.create(dir_save)
   
   # faust-specific information
   # ======================
@@ -27,14 +23,14 @@ get_faust_cyt_pos <- function(dir_faust,
   )
   
   for (pop in names(pop_to_defn)) {
-    dir_cyt_pop <- file.path(
-      dir_cyt, 
+    dir_save_pop <- file.path(
+      dir_save, 
       pop
     )
     if (force) {
-      unlink(dir_cyt_pop, recursive = TRUE)
+      unlink(dir_save_pop, recursive = TRUE)
     }
-    if (!dir.exists(dir_cyt_pop)) dir.create(dir_cyt_pop)
+    if (!dir.exists(dir_save_pop)) dir.create(dir_save_pop)
     
     # Non-FAUST prep
     # =====================
@@ -163,18 +159,18 @@ get_faust_cyt_pos <- function(dir_faust,
         faust_fcs <- tidy_to_faust_fcs[ind_to_fcs_match]
         
         # create directory to save to
-        dir_cyt_pop_ind <- file.path(
-          dir_cyt_pop, 
+        dir_save_pop_ind <- file.path(
+          dir_save_pop, 
           paste0(match_tbl_stim$SampleID, "_", match_tbl_stim$Stim)
         )
-        if (!dir.exists(dir_cyt_pop_ind)) {
-          dir.create(dir_cyt_pop_ind)
+        if (!dir.exists(dir_save_pop_ind)) {
+          dir.create(dir_save_pop_ind)
         }
-        if (!force & file.exists(file.path(dir_cyt_pop_ind, "completed.rds"))) {
+        if (!force & file.exists(file.path(dir_save_pop_ind, "completed.rds"))) {
           next
         } 
-        if (file.exists(file.path(dir_cyt_pop_ind, "completed.rds"))) {
-          file.remove(file.path(dir_cyt_pop_ind, "completed.rds"))
+        if (file.exists(file.path(dir_save_pop_ind, "completed.rds"))) {
+          file.remove(file.path(dir_save_pop_ind, "completed.rds"))
         }
         
         # get sample faust directory
@@ -437,21 +433,21 @@ get_faust_cyt_pos <- function(dir_faust,
         saveRDS(
           object = ann_tbl,
           file = file.path(
-            dir_cyt_pop_ind, 
+            dir_save_pop_ind, 
             "ann_tbl.rds"
           )
         )
         saveRDS(
           object = sample_info_tbl,
           file = file.path(
-            dir_cyt_pop_ind, 
+            dir_save_pop_ind, 
             "sample_info_tbl.rds"
           )
         )
         saveRDS(
           object = TRUE,
           file = file.path(
-            dir_cyt_pop_ind, 
+            dir_save_pop_ind, 
             "completed.rds"
           )
         )
@@ -460,15 +456,15 @@ get_faust_cyt_pos <- function(dir_faust,
   }
   
   out_tbl <- purrr::map_df(names(pop_to_defn), function(pop) {
-    dir_cyt_pop <- file.path(dir_cyt, pop)
-    dir_vec <- list.dirs(dir_cyt_pop, recursive = FALSE, full.names = FALSE)
+    dir_save_pop <- file.path(dir_save, pop)
+    dir_vec <- list.dirs(dir_save_pop, recursive = FALSE, full.names = FALSE)
     purrr::map(dir_vec, function(sample) {
       ann_tbl <- try(readRDS(
-        file.path(dir_cyt_pop, sample, "ann_tbl.rds" )
-      ), 
+        file.path(dir_save_pop, sample, "ann_tbl.rds" )
+      ),
       silent = TRUE)
       sample_info_tbl <- try(readRDS(
-        file.path(dir_cyt_pop, sample, "sample_info_tbl.rds" )
+        file.path(dir_save_pop, sample, "sample_info_tbl.rds" )
       ), 
       silent = TRUE)
       if(class(ann_tbl) == "try-error" ||
