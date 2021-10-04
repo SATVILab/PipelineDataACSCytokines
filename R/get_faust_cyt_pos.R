@@ -1,3 +1,4 @@
+#' @export
 get_faust_cyt_pos <- function(dir_faust,
                               dir_save,
                               pop_to_defn, # pop_list
