@@ -1,5 +1,5 @@
 #' @title Preprocess cytokine data
-#' 
+#'
 #' @param label_cytokines function. A function that takes
 #' the cytokine names as input and returns the
 #' value desired to be plotted along the y-axis
@@ -34,7 +34,7 @@ preprocess_cytokine_data <-
     gs_nm = "gs_cytof_acs_nk",
     chnls_gate = c("Ho165Di", "Gd158Di", "Nd146Di",
               "Dy164Di", "Gd156Di", "Nd150Di"),
-    chnls_analyse = "", 
+    chnls_analyse = "",
     gate = FALSE,
     fast = FALSE,
     stats_only = FALSE,
@@ -272,10 +272,10 @@ preprocess_cytokine_data <-
     "tables", "gate_stats.rds"
     )
   stats_combn_tbl <- readRDS(path_stats)
-  saveRDS(object = paste0(chnls_gate), 
-          file = file.path(path_cyt_combn_base_stats, 
+  saveRDS(object = paste0(chnls_gate),
+          file = file.path(path_cyt_combn_base_stats,
                            "chnls_gate.rds"))
-  
+
   path_cyt_combn_base <- file.path(
     path_base,
     paste0(chnls_analyse, collapse = "_")
@@ -286,18 +286,18 @@ preprocess_cytokine_data <-
   readr::write_csv(
     x = data.frame(
       chnl = chnls_gate, marker = chnl_lab[chnls_gate]
-      ), 
+      ),
    file = file.path(
-     path_cyt_combn_base, 
+     path_cyt_combn_base,
      "chnls_gate.csv"
      ))
 
   # ================================
   # Save cyt+ FCS files
   # ================================
-  
+
   # directory for analysise
-  
+
   gate_tbl <- readRDS(file.path(
     path_cyt_combn_base_stats, "tables", "gate_tbl.rds"
     ))
@@ -406,9 +406,9 @@ preprocess_cytokine_data <-
   # ================================
   # Format stats_combn_tbl
   # ================================
-  
+
   chnl_vec_all <- stringr::str_split(
-    stats_combn_tbl$cyt_combn[1], 
+    stats_combn_tbl$cyt_combn[1],
     "~[+-]~"
   )[[1]]
   chnl_vec_all <- chnl_vec_all[chnl_vec_all != ""]
@@ -417,8 +417,8 @@ preprocess_cytokine_data <-
     stats_combn_tbl <- stats_combn_tbl %>%
       dplyr::mutate(
         cyt_combn = stringr::str_remove(
-          cyt_combn, 
-          paste0(chnl_vec_exc[i], "~[+-]~") 
+          cyt_combn,
+          paste0(chnl_vec_exc[i], "~[+-]~")
         )
       )
   }
@@ -428,15 +428,15 @@ preprocess_cytokine_data <-
         gate_name, ind, SampleID, stim, cyt_combn
       ) %>%
       dplyr::summarise(
-        count_stim = sum(count_stim), 
+        count_stim = sum(count_stim),
         n_cell_stim = n_cell_stim[1],
         count_uns = sum(count_uns),
         n_cell_uns = n_cell_uns[1],
-        prop_stim = sum(prop_stim), 
-        prop_uns = sum(prop_uns), 
+        prop_stim = sum(prop_stim),
+        prop_uns = sum(prop_uns),
         prop_bs = sum(prop_bs),
-        freq_stim = sum(freq_stim), 
-        freq_uns = sum(freq_uns), 
+        freq_stim = sum(freq_stim),
+        freq_uns = sum(freq_uns),
         freq_bs = sum(freq_bs),
         .groups = "drop"
       )
@@ -494,7 +494,7 @@ preprocess_cytokine_data <-
   all_neg_cyt_combn <- str_remove_all(cyt_combn_rep_lab_vec[[1]], "[!]") %>%
     str_replace_all("[&]", "&!")
   all_neg_cyt_combn <- paste0("!", all_neg_cyt_combn)
-  
+
   stats_combn_tbl <- stats_combn_tbl %>%
     dplyr::filter(!cyt_combn == all_neg_cyt_combn)
 
@@ -1483,7 +1483,7 @@ preprocess_cytokine_data <-
         "flowsom", "flowsom.rds")
     )
   }
-  
+
   out_list <- out_list %>%
     append(list("flowsom" = flowsom_tbl))
 
