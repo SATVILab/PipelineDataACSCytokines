@@ -1,5 +1,6 @@
 #' @title Preprocess cytokine data
 #'
+#' @param dir_faust character. Path to FAUST project directory.
 #' @param label_cytokines function. A function that takes
 #' the cytokine names as input and returns the
 #' value desired to be plotted along the y-axis
@@ -31,6 +32,7 @@
 #' @import dplyr
 preprocess_cytokine_data <-
   function(
+    dir_faust,
     gs_nm = "gs_cytof_acs_nk",
     chnls_gate = c("Ho165Di", "Gd158Di", "Nd146Di",
               "Dy164Di", "Gd156Di", "Nd150Di"),
