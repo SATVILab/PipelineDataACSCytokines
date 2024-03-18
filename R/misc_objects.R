@@ -1,8 +1,3 @@
-#' @title FAUST project directory
-#'
-#' @export
-# dir_data <- file.path(here::here(), "..", "..", "Data")
-
 #' @title Cytokine labelling function
 #'
 #' @description Function to label cytokines
