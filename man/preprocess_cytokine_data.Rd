@@ -5,7 +5,8 @@
 \title{Preprocess cytokine data}
 \usage{
 preprocess_cytokine_data(
-  dir_faust,
+  path_faust_dir,
+  path_output,
   gs_nm = "gs_cytof_acs_nk",
   chnls_gate = c("Ho165Di", "Gd158Di", "Nd146Di", "Dy164Di", "Gd156Di", "Nd150Di"),
   chnls_analyse = "",
@@ -43,7 +44,7 @@ preprocess_cytokine_data(
 )
 }
 \arguments{
-\item{dir_faust}{character. Path to FAUST project directory.}
+\item{path_faust_dir}{character. Path to FAUST project directory.}
 
 \item{label_cytokines}{function. A function that takes
 the cytokine names as input and returns the

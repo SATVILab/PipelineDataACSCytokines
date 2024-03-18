@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc_objects.R
 \name{label_cytokines}
 \alias{label_cytokines}
-\title{FAUST project directory}
+\title{Cytokine labelling function}
 \usage{
 label_cytokines(cyt)
 }
