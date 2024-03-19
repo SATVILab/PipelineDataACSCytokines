@@ -1,4 +1,4 @@
 library(testthat)
-library(PipelineDataCytokines)
+library(PipelineDataACSCytokines)
 
-test_check("PipelineDataCytokines")
+test_check("PipelineDataACSCytokines")

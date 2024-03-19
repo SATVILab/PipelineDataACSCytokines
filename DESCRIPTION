@@ -1,6 +1,8 @@
 Package: PipelineDataACSCytokines
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Provide functions for getting
+    and analysing cytokine-positive cells
+    from the ACS CyTOF data
 Version: 0.1.1
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>

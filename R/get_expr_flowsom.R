@@ -49,8 +49,8 @@ get_expr_flowsom <- function(dir_gating,
           fr <- flowCore::read.FCS(file.path(dir_fcs_cyt, fcs_vec[1]))
 
           # format
-          chnl_lab_vec_fcs <- c(cytoutils::chnl_lab(fr), c("fcs" = "fcs"))
-          marker_lab_vec_fcs <- c(cytoutils::marker_lab(fr), c("fcs" = "fcs"))
+          chnl_lab_vec_fcs <- c(UtilsCytoRSV::chnl_lab(fr), c("fcs" = "fcs"))
+          marker_lab_vec_fcs <- c(UtilsCytoRSV::marker_lab(fr), c("fcs" = "fcs"))
 
           # remove columnns without descriptors and CD45
           ex_tbl <- ex_tbl[,colnames(ex_tbl) %in% names(chnl_lab_vec_fcs)]

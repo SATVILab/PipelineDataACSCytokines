@@ -31,49 +31,48 @@
 #' @import ggplot2
 #' @import dplyr
 preprocess_cytokine_data <-
-  function(
-      path_faust_dir,
-      path_output,
-      gs_nm = "gs_cytof_acs_nk",
-      chnls_gate = c(
-        "Ho165Di", "Gd158Di", "Nd146Di",
-        "Dy164Di", "Gd156Di", "Nd150Di"
-      ),
-      chnls_analyse = "",
-      gate = FALSE,
-      fast = FALSE,
-      stats_only = FALSE,
-      plots_only = FALSE,
-      save_cyt_pos_fcs = TRUE,
-      combn_exc_list = list(
-        NULL,
-        c("Nd146Di", "Gd156Di", "Nd150Di")
-      ),
-      hladr = FALSE,
-      hladr_bulk = FALSE,
-      label_cytokines = PipelineDataACSCyTOF::label_cytokines,
-      compass = TRUE,
-      compass_stim = c("p1", "mtb", "ebv", "p4"),
-      compass_fast = FALSE,
-      downstream_exc_list = NULL,
-      tsne = TRUE,
-      tsne_plot = TRUE,
-      tsne_plot_force = TRUE,
-      tsne_save = TRUE,
-      tsne_reuse = TRUE,
-      post_probs_bulk = TRUE,
-      post_probs_bulk_stim = c("p1", "mtb", "ebv"),
-      flowsom = TRUE,
-      flowsom_stim = c("all_u"),
-      flowsom_p4_exc = TRUE,
-      flowsom_scale = FALSE,
-      flowsom_n_clust = "n_f",
-      flowsom_r_o = c("r_o", "all"),
-      jacc_n = 1e2,
-      jacc_reuse = TRUE,
-      flowsom_post_probs = FALSE,
-      flowsom_plot = TRUE,
-      flowsom_plot_force = TRUE) {
+  function(path_faust_dir,
+           path_output,
+           gs_nm = "gs_cytof_acs_nk",
+           chnls_gate = c(
+             "Ho165Di", "Gd158Di", "Nd146Di",
+             "Dy164Di", "Gd156Di", "Nd150Di"
+           ),
+           chnls_analyse = "",
+           gate = FALSE,
+           fast = FALSE,
+           stats_only = FALSE,
+           plots_only = FALSE,
+           save_cyt_pos_fcs = TRUE,
+           combn_exc_list = list(
+             NULL,
+             c("Nd146Di", "Gd156Di", "Nd150Di")
+           ),
+           hladr = FALSE,
+           hladr_bulk = FALSE,
+           label_cytokines = PipelineDataACSCytokines::label_cytokines,
+           compass = TRUE,
+           compass_stim = c("p1", "mtb", "ebv", "p4"),
+           compass_fast = FALSE,
+           downstream_exc_list = NULL,
+           tsne = TRUE,
+           tsne_plot = TRUE,
+           tsne_plot_force = TRUE,
+           tsne_save = TRUE,
+           tsne_reuse = TRUE,
+           post_probs_bulk = TRUE,
+           post_probs_bulk_stim = c("p1", "mtb", "ebv"),
+           flowsom = TRUE,
+           flowsom_stim = c("all_u"),
+           flowsom_p4_exc = TRUE,
+           flowsom_scale = FALSE,
+           flowsom_n_clust = "n_f",
+           flowsom_r_o = c("r_o", "all"),
+           jacc_n = 1e2,
+           jacc_reuse = TRUE,
+           flowsom_post_probs = FALSE,
+           flowsom_plot = TRUE,
+           flowsom_plot_force = TRUE) {
     # ======================
     # Preparation
     # ======================
@@ -258,7 +257,7 @@ preprocess_cytokine_data <-
     # ================================
 
     gate_name_vec <- c("locb0.15_min_clust")
-    chnl_lab <- cytoutils::chnl_lab(
+    chnl_lab <- UtilsCytoRSV::chnl_lab(
       flowWorkspace::gh_pop_get_data(gs[[1]])
     )
     ind_batch_list <- outliergatev1:::.get_ind_batch_list(
@@ -650,7 +649,7 @@ preprocess_cytokine_data <-
               count_stim, n_cell_uns, count_uns
             ) %>%
             dplyr::left_join(
-              TuberculomicsCompendium::clinical_data %>%
+              DataTidyACSClinical::clinical_data %>%
                 dplyr::select(
                   SubjectID, Progressor, timeToTB,
                   timeToTBFromVisit, SampleID, VisitType
@@ -1373,7 +1372,7 @@ preprocess_cytokine_data <-
         purrr::map(gn_vec, function(gn) {
           compass_list <- out_list$compass[[gn]]
           purrr::map(names(compass_list), function(stim) {
-            compassutils::response_prob(
+            UtilsCompassSV::response_prob(
               c_obj = compass_list[[stim]],
               exc = cyt_combn_exc_vec
             ) %>%

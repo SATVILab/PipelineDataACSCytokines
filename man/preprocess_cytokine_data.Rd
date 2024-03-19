@@ -18,7 +18,7 @@ preprocess_cytokine_data(
   combn_exc_list = list(NULL, c("Nd146Di", "Gd156Di", "Nd150Di")),
   hladr = FALSE,
   hladr_bulk = FALSE,
-  label_cytokines = PipelineDataACSCyTOF::label_cytokines,
+  label_cytokines = PipelineDataACSCytokines::label_cytokines,
   compass = TRUE,
   compass_stim = c("p1", "mtb", "ebv", "p4"),
   compass_fast = FALSE,
