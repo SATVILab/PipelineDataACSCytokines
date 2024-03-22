@@ -13,7 +13,6 @@ plot_dim_red <- function(flowsom_out,
                          font_size = 14,
                          width = 6,
                          height = 6) {
-
   unlink(dir_save, recursive = TRUE)
   if (!dir.exists(dir_save)) {
     dir.create(dir_save, recursive = TRUE)
@@ -27,13 +26,13 @@ plot_dim_red <- function(flowsom_out,
 
   purrr::walk(method_vec, function(method) {
     purrr::walk(inc_exc_stim_vec, function(inc_exc_stim) {
-      clust_vec <- flowsom_out %>%
+      clust_vec <- flowsom_out |>
         dplyr::filter(
           stim %in% stim_plot
-        ) %>%
-        dplyr::pull("clust") %>%
-        unique() %>%
-        as.numeric() %>%
+        ) |>
+        dplyr::pull("clust") |>
+        unique() |>
+        as.numeric() |>
         sort()
 
       purrr::walk(clust_vec, function(clust) {
@@ -94,8 +93,7 @@ plot_dim_red <- function(flowsom_out,
                                     col_clust = NULL,
                                     font_size = 10,
                                     inc_exc_stim) {
-
-  plot_tbl <- flowsom_out %>%
+  plot_tbl <- flowsom_out |>
     dplyr::filter(
       (stim %in% stim_plot &
         .data$clust == .env$clust) |
@@ -103,7 +101,7 @@ plot_dim_red <- function(flowsom_out,
     )
 
   if (!inc_exc_stim) {
-    plot_tbl <- plot_tbl %>%
+    plot_tbl <- plot_tbl |>
       dplyr::filter(
         (stim %in% stim_plot &
           .data$clust != .env$clust) |
@@ -113,12 +111,12 @@ plot_dim_red <- function(flowsom_out,
 
   dim_vec <- paste0(method, 1:2)
 
-  plot_tbl <- plot_tbl %>%
+  plot_tbl <- plot_tbl |>
     dplyr::mutate(
       clust = ifelse(.data$clust == .env$clust,
         paste0("Cluster ", clust), "Other"
       )
-    ) %>%
+    ) |>
     dplyr::select(
       .data[[dim_vec[1]]],
       .data[[dim_vec[2]]],
@@ -138,12 +136,12 @@ plot_dim_red <- function(flowsom_out,
       y = .data[[dim_vec[2]]],
       col = clust
     )
-    ) +
+  ) +
     cowplot::theme_cowplot(font_size = font_size) +
     geom_point(
       aes(alpha = clust),
       size = 0.25, show.legend = FALSE
-      ) +
+    ) +
     scale_colour_manual(values = setNames(
       c(col_clust, "gray75"),
       c(paste0("Cluster ", clust), "Other")
@@ -157,7 +155,7 @@ plot_dim_red <- function(flowsom_out,
       axis.text = element_blank(),
       axis.ticks = element_blank(),
       axis.title = element_blank(),
-     ) +
+    ) +
     labs(title = paste0("Cluster ", clust)) +
     coord_equal()
 }

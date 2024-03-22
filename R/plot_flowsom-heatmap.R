@@ -3,7 +3,7 @@ get_order_list <- function(flowsom_out,
                            ecdf_list = NULL,
                            chnl_lab,
                            chnl_sel = NULL) {
-  flowsom_out_long <- flowsom_out %>%
+  flowsom_out_long <- flowsom_out |>
     tidyr::pivot_longer(
       cols = -c(clust:tsne2),
       names_to = "marker",
@@ -22,8 +22,8 @@ get_order_list <- function(flowsom_out,
     marker_sel_vec <- purrr::map_chr(
       ecdf_list,
       function(x) unique(x$marker)
-    ) %>%
-      unlist() %>%
+    ) |>
+      unlist() |>
       unique()
   } else {
     marker_sel_vec <- chnl_lab[chnl_sel]
@@ -31,30 +31,30 @@ get_order_list <- function(flowsom_out,
 
   flowsom_out_long_grid <- purrr::map_df(
     unique(flowsom_out_long$clust), function(clust) {
-      flowsom_out_long_clust <- flowsom_out_long %>%
+      flowsom_out_long_clust <- flowsom_out_long |>
         dplyr::filter(.data$clust == .env$clust)
-      flowsom_out_long_clust_non <- flowsom_out_long %>%
+      flowsom_out_long_clust_non <- flowsom_out_long |>
         dplyr::filter(.data$clust != .env$clust)
       purrr::map_df(marker_sel_vec, function(marker) {
-        flowsom_out_long_clust_marker <- flowsom_out_long_clust %>%
+        flowsom_out_long_clust_marker <- flowsom_out_long_clust |>
           dplyr::filter(.data$marker == .env$marker)
         med <- median(flowsom_out_long_clust_marker$expr)
         ecdf_other <- ecdf_list[[clust]][[marker]]
-        flowsom_out_long_clust_marker[1, ] %>%
-          dplyr::mutate(perc = ecdf_other(med) * 1e2) %>%
+        flowsom_out_long_clust_marker[1, ] |>
+          dplyr::mutate(perc = ecdf_other(med) * 1e2) |>
           dplyr::select(clust, marker, perc)
       })
     }
   )
 
 
-  expr_tbl <- flowsom_out_long_grid %>%
+  expr_tbl <- flowsom_out_long_grid |>
     tidyr::pivot_wider(names_from = marker, values_from = perc)
 
   clust_vec <- expr_tbl$clust
 
-  expr_mat_clust <- expr_tbl %>%
-    dplyr::select(-clust) %>%
+  expr_mat_clust <- expr_tbl |>
+    dplyr::select(-clust) |>
     as.matrix()
 
   rownames(expr_mat_clust) <- clust_vec
@@ -75,7 +75,7 @@ get_order_list <- function(flowsom_out,
 
 #' @title Get ecdf for marker expression on non-cluster cells for each cluster
 get_ecdf_list <- function(flowsom_out, chnl_lab, chnl_sel) {
-  flowsom_out_long <- flowsom_out %>%
+  flowsom_out_long <- flowsom_out |>
     tidyr::pivot_longer(
       cols = -c(clust:tsne2),
       names_to = "marker",
@@ -83,15 +83,15 @@ get_ecdf_list <- function(flowsom_out, chnl_lab, chnl_sel) {
     )
 
   ecdf_list <- purrr::map(unique(flowsom_out_long$clust), function(clust) {
-    flowsom_out_long_clust_non <- flowsom_out_long %>%
+    flowsom_out_long_clust_non <- flowsom_out_long |>
       dplyr::filter(.data$clust != .env$clust)
     purrr::map(chnl_lab[chnl_sel], function(marker) {
-      ecdf(flowsom_out_long_clust_non %>%
-        dplyr::filter(.data$marker == .env$marker) %>%
+      ecdf(flowsom_out_long_clust_non |>
+        dplyr::filter(.data$marker == .env$marker) |>
         dplyr::pull(expr))
-    }) %>%
+    }) |>
       setNames(chnl_lab[chnl_sel])
-  }) %>%
+  }) |>
     setNames(unique(flowsom_out_long$clust))
 }
 
@@ -205,7 +205,7 @@ plot_clust_map <- function(flowsom_out,
       stab_min <- 0
     } else {
       if ("stability" %in% colnames(flowsom_out)) {
-        flowsom_out <- flowsom_out %>%
+        flowsom_out <- flowsom_out |>
           dplyr::filter(.data$stability > stab_min)
       }
       if (nrow(flowsom_out) == 0) {
@@ -218,7 +218,7 @@ plot_clust_map <- function(flowsom_out,
     }
   }
 
-  flowsom_out_long <- flowsom_out %>%
+  flowsom_out_long <- flowsom_out |>
     tidyr::pivot_longer(
       cols = -c(clust:tsne2),
       names_to = "marker",
@@ -244,15 +244,15 @@ plot_clust_map <- function(flowsom_out,
     )
   }
 
-  marker_sel_vec <- purrr::map(ecdf_list, function(x) names(x)) %>%
-    unlist() %>%
+  marker_sel_vec <- purrr::map(ecdf_list, function(x) names(x)) |>
+    unlist() |>
     unique()
 
   # get relative expression for each marker for each clusters
   flowsom_out_long_grid <- purrr::map_df(
     unique(flowsom_out_long$clust),
     function(clust) {
-      flowsom_out_long_clust <- flowsom_out_long %>%
+      flowsom_out_long_clust <- flowsom_out_long |>
         dplyr::filter(.data$clust == .env$clust)
 
       if (!stim_plot %in% c("all", "all_u")) {
@@ -261,14 +261,14 @@ plot_clust_map <- function(flowsom_out,
       }
 
       purrr::map_df(marker_sel_vec, function(marker) {
-        flowsom_out_long_clust_marker <- flowsom_out_long_clust %>%
+        flowsom_out_long_clust_marker <- flowsom_out_long_clust |>
           dplyr::filter(.data$marker == .env$marker)
-        med <- median(flowsom_out_long_clust_marker %>%
+        med <- median(flowsom_out_long_clust_marker |>
           dplyr::pull(expr))
         ecdf_other <- ecdf_list[[clust]][[marker]]
 
-        flowsom_out_long_clust_marker[1, ] %>%
-          dplyr::mutate(perc = ecdf_other(med) * 1e2) %>%
+        flowsom_out_long_clust_marker[1, ] |>
+          dplyr::mutate(perc = ecdf_other(med) * 1e2) |>
           dplyr::select(clust, marker, perc)
       })
     }
@@ -295,22 +295,22 @@ plot_clust_map <- function(flowsom_out,
 
   # create base plots
   p <- ggplot(
-    flowsom_out_long_grid %>%
-      dplyr::filter(marker %in% marker_sel_vec) %>%
+    flowsom_out_long_grid |>
+      dplyr::filter(marker %in% marker_sel_vec) |>
       dplyr::mutate(
         clust = factor(clust, levels = order_vec_cluster),
         marker = factor(marker, levels = order_vec_marker)
-      ) %>%
+      ) |>
       dplyr::rename(`Percentile on non-cluster cells` = perc),
     aes(y = marker, x = clust)
   ) +
     geom_raster(aes(fill = `Percentile on non-cluster cells`))
 
 
-  stability_tbl <- flowsom_out_long %>%
-    dplyr::group_by(clust) %>%
-    dplyr::slice(1) %>%
-    dplyr::select(clust, stability) %>%
+  stability_tbl <- flowsom_out_long |>
+    dplyr::group_by(clust) |>
+    dplyr::slice(1) |>
+    dplyr::select(clust, stability) |>
     dplyr::ungroup()
 
   stability_lab_vec <- setNames(
