@@ -26,7 +26,7 @@
 #'
 #' @importFrom flowCore exprs exprs<-
 #' @importFrom rlang !!
-#' @importFrom magrittr %>% %<>%
+#' @importFrom magrittr |> %<>%
 #' @import stringr
 #' @import ggplot2
 #' @import dplyr
@@ -197,7 +197,7 @@ preprocess_cytokine_data <-
       )$FILENAME
       last_slash_loc_tbl <- str_locate_all(fn, "/")[[1]]
       last_slash_loc <- last_slash_loc_tbl[nrow(last_slash_loc_tbl), "end"][[1]]
-      fn <- str_sub(fn, last_slash_loc + 1) %>%
+      fn <- str_sub(fn, last_slash_loc + 1) |>
         str_remove(".fcs")
       second_underscore_loc <- str_locate_all(fn, "_")[[1]][2, "end"][[1]]
       fcs <- str_sub(fn, end = second_underscore_loc - 1)
@@ -274,13 +274,13 @@ preprocess_cytokine_data <-
       data = gs
     )
     path_base <- outliergatev1:::.create_dir_base(
-      params = params_env %>%
+      params = params_env |>
         append(list(cut = marker_list[[1]]$cut)),
       dir_base_init = file.path(
         path_output,
         "datalarge"
       )
-    ) %>%
+    ) |>
       dirname()
     path_cyt_combn_base_stats <- file.path(
       path_base,
@@ -392,11 +392,11 @@ preprocess_cytokine_data <-
               ind_in_batch_gate = 1:5,
               cytof_fcs_to_clin_map = NULL,
               ind_in_batch_uns = 5
-            ) %>%
+            ) |>
               dplyr::mutate(mult = mult)
-          }) %>%
+          }) |>
             dplyr::mutate(chnl = paste0(chnl_vec, collapse = "_"))
-        }) %>%
+        }) |>
           dplyr::mutate(gate_name = .env$gate_name)
       })
       analysispipeline::save_objects(
@@ -415,13 +415,13 @@ preprocess_cytokine_data <-
       message("calcating HLADR expression on bulk cells")
       hladr_tbl_bulk <- purrr::map_df(seq_along(gs), function(i) {
         fr <- flowWorkspace::gh_pop_get_data(gs[[i]])
-        ex <- exprs(fr) %>% tibble::as_tibble()
-        tibble::tibble(SampleID = fcs_lab_vec[i], stim = stim_lab_vec[i]) %>%
+        ex <- exprs(fr) |> tibble::as_tibble()
+        tibble::tibble(SampleID = fcs_lab_vec[i], stim = stim_lab_vec[i]) |>
           dplyr::mutate(
             SubjectID = str_sub(SampleID, end = 6),
             VisitType = str_sub(SampleID, start = 8)
-          ) %>%
-          dplyr::select(SubjectID, VisitType, stim) %>%
+          ) |>
+          dplyr::select(SubjectID, VisitType, stim) |>
           dplyr::mutate(
             med = median(ex[["Eu151Di"]]),
             mean = mean(ex[["Eu151Di"]]),
@@ -449,7 +449,7 @@ preprocess_cytokine_data <-
     chnl_vec_all <- chnl_vec_all[chnl_vec_all != ""]
     chnl_vec_exc <- setdiff(chnl_vec_all, chnls_analyse)
     for (i in seq_along(chnl_vec_exc)) {
-      stats_combn_tbl <- stats_combn_tbl %>%
+      stats_combn_tbl <- stats_combn_tbl |>
         dplyr::mutate(
           cyt_combn = stringr::str_remove(
             cyt_combn,
@@ -458,10 +458,10 @@ preprocess_cytokine_data <-
         )
     }
     if (length(chnl_vec_exc) > 0) {
-      stats_combn_tbl <- stats_combn_tbl %>%
+      stats_combn_tbl <- stats_combn_tbl |>
         dplyr::group_by(
           gate_name, ind, SampleID, stim, cyt_combn
-        ) %>%
+        ) |>
         dplyr::summarise(
           count_stim = sum(count_stim),
           n_cell_stim = n_cell_stim[1],
@@ -505,14 +505,14 @@ preprocess_cytokine_data <-
         )
         paste0(cyt_combn_rep_start, cyt_combn_rep_end)
       }
-    ) %>%
+    ) |>
       setNames(unique(stats_combn_tbl$cyt_combn))
 
-    stats_combn_tbl <- stats_combn_tbl %>%
+    stats_combn_tbl <- stats_combn_tbl |>
       dplyr::mutate(
         stim = stim_lab_vec[as.character(ind)],
         batch_sh = fcs_lab_vec[as.character(ind)]
-      ) %>%
+      ) |>
       dplyr::mutate(
         SubjectID = purrr::map_chr(
           batch_sh,
@@ -522,38 +522,38 @@ preprocess_cytokine_data <-
           batch_sh,
           function(x) str_split(x, "_")[[1]][[2]]
         )
-      ) %>%
+      ) |>
       dplyr::select(
         gate_name, ind, batch_sh, SubjectID, VisitType,
         stim, cyt_combn, count_stim, n_cell_stim,
         count_uns, n_cell_uns
       )
 
-    stats_combn_tbl <- stats_combn_tbl %>% dplyr::mutate(
+    stats_combn_tbl <- stats_combn_tbl |> dplyr::mutate(
       cyt_combn = cyt_combn_rep_lab_vec[cyt_combn]
     )
 
-    all_neg_cyt_combn <- str_remove_all(cyt_combn_rep_lab_vec[[1]], "[!]") %>%
+    all_neg_cyt_combn <- str_remove_all(cyt_combn_rep_lab_vec[[1]], "[!]") |>
       str_replace_all("[&]", "&!")
     all_neg_cyt_combn <- paste0("!", all_neg_cyt_combn)
 
-    stats_combn_tbl <- stats_combn_tbl %>%
+    stats_combn_tbl <- stats_combn_tbl |>
       dplyr::filter(!cyt_combn == all_neg_cyt_combn)
 
-    stats_combn_tbl_neg <- stats_combn_tbl %>%
-      dplyr::group_by(ind, gate_name, batch_sh, SubjectID, VisitType, stim) %>%
+    stats_combn_tbl_neg <- stats_combn_tbl |>
+      dplyr::group_by(ind, gate_name, batch_sh, SubjectID, VisitType, stim) |>
       dplyr::summarise(
         n_cell_stim = n_cell_stim[1],
         n_cell_uns = n_cell_uns[1],
         count_stim = n_cell_stim[1] - sum(count_stim),
         count_uns = n_cell_uns - sum(count_uns)
-      ) %>%
-      dplyr::mutate(cyt_combn = all_neg_cyt_combn) %>%
+      ) |>
+      dplyr::mutate(cyt_combn = all_neg_cyt_combn) |>
       dplyr::ungroup()
 
-    stats_combn_tbl <- stats_combn_tbl %>% dplyr::bind_rows(stats_combn_tbl_neg)
+    stats_combn_tbl <- stats_combn_tbl |> dplyr::bind_rows(stats_combn_tbl_neg)
 
-    stats_combn_tbl <- stats_combn_tbl %>%
+    stats_combn_tbl <- stats_combn_tbl |>
       dplyr::mutate(stim = ifelse(stim == "mtbaux", "mtb", stim))
 
     # ========================
@@ -568,13 +568,13 @@ preprocess_cytokine_data <-
       chnls_analyse)) {
       ds_name <- paste0(ds_name, "_th1")
     } else {
-      if ("Ho165Di" %in% chnls_analyse) ds_name <- ds_name %>% paste0("_ifng")
-      if ("Gd158Di" %in% chnls_analyse) ds_name <- ds_name %>% paste0("_il2")
-      if ("Nd146Di" %in% chnls_analyse) ds_name <- ds_name %>% paste0("_tnf")
+      if ("Ho165Di" %in% chnls_analyse) ds_name <- ds_name |> paste0("_ifng")
+      if ("Gd158Di" %in% chnls_analyse) ds_name <- ds_name |> paste0("_il2")
+      if ("Nd146Di" %in% chnls_analyse) ds_name <- ds_name |> paste0("_tnf")
     }
-    if ("Dy164Di" %in% chnls_analyse) ds_name <- ds_name %>% paste0("_il17")
-    if ("Nd150Di" %in% chnls_analyse) ds_name <- ds_name %>% paste0("_il22")
-    if ("Gd156Di" %in% chnls_analyse) ds_name <- ds_name %>% paste0("_il6")
+    if ("Dy164Di" %in% chnls_analyse) ds_name <- ds_name |> paste0("_il17")
+    if ("Nd150Di" %in% chnls_analyse) ds_name <- ds_name |> paste0("_il22")
+    if ("Gd156Di" %in% chnls_analyse) ds_name <- ds_name |> paste0("_il6")
 
     # save results
     # ---------------------
@@ -632,7 +632,7 @@ preprocess_cytokine_data <-
         print(gate_name_curr)
         purrr::map(compass_stim, function(stim_curr) {
           print(stim_curr)
-          stats_combn_tbl_curr <- stats_combn_tbl %>%
+          stats_combn_tbl_curr <- stats_combn_tbl |>
             dplyr::filter(
               gate_name == gate_name_curr,
               stim == stim_curr
@@ -642,14 +642,14 @@ preprocess_cytokine_data <-
           # Get the SampleID and other metatadata
           # =============================
 
-          full_tbl <- stats_combn_tbl_curr %>%
+          full_tbl <- stats_combn_tbl_curr |>
             dplyr::select(
               SubjectID, VisitType, stim,
               gate_name, cyt_combn, n_cell_stim,
               count_stim, n_cell_uns, count_uns
-            ) %>%
+            ) |>
             dplyr::left_join(
-              DataTidyACSClinical::clinical_data %>%
+              DataTidyACSClinical::clinical_data |>
                 dplyr::select(
                   SubjectID, Progressor, timeToTB,
                   timeToTBFromVisit, SampleID, VisitType
@@ -661,18 +661,18 @@ preprocess_cytokine_data <-
           # Get data_uns
           # =============================
 
-          data_uns <- full_tbl %>%
+          data_uns <- full_tbl |>
             dplyr::select(
               SampleID, cyt_combn,
               count_uns, n_cell_uns
-            ) %>%
+            ) |>
             dplyr::rename(
               count = count_uns,
               n_cell = n_cell_uns
             )
 
-          data_uns <- data_uns %>%
-            dplyr::select(-n_cell) %>%
+          data_uns <- data_uns |>
+            dplyr::select(-n_cell) |>
             tidyr::pivot_wider(
               id_cols = "SampleID",
               names_from = cyt_combn,
@@ -681,23 +681,23 @@ preprocess_cytokine_data <-
 
           id_vec_uns <- data_uns$SampleID
 
-          data_uns <- data_uns %>%
-            dplyr::select(-SampleID) %>%
+          data_uns <- data_uns |>
+            dplyr::select(-SampleID) |>
             dplyr::mutate_all(as.numeric)
 
-          data_uns <- data_uns %>% as.matrix()
+          data_uns <- data_uns |> as.matrix()
           rownames(data_uns) <- id_vec_uns
 
           # =============================
           # Get data_stim
           # =============================
 
-          data_stim <- full_tbl %>%
-            dplyr::select(SampleID, cyt_combn, count_stim, n_cell_stim) %>%
+          data_stim <- full_tbl |>
+            dplyr::select(SampleID, cyt_combn, count_stim, n_cell_stim) |>
             dplyr::rename(count = count_stim, n_cell = n_cell_stim)
 
-          data_stim <- data_stim %>%
-            dplyr::select(-n_cell) %>%
+          data_stim <- data_stim |>
+            dplyr::select(-n_cell) |>
             tidyr::pivot_wider(
               id_cols = "SampleID",
               names_from = cyt_combn,
@@ -706,11 +706,11 @@ preprocess_cytokine_data <-
 
           id_vec_stim <- data_stim$SampleID
 
-          data_stim <- data_stim %>%
-            dplyr::select(-SampleID) %>%
+          data_stim <- data_stim |>
+            dplyr::select(-SampleID) |>
             dplyr::mutate_all(as.numeric)
 
-          data_stim <- data_stim %>% as.matrix()
+          data_stim <- data_stim |> as.matrix()
           rownames(data_stim) <- id_vec_stim
 
           # =============================
@@ -718,28 +718,28 @@ preprocess_cytokine_data <-
           # =============================
 
 
-          data_stim <- data_stim %>% as.matrix()
+          data_stim <- data_stim |> as.matrix()
           rownames(data_stim) <- id_vec_stim
 
           if (!identical(rownames(data_stim), rownames(data_uns))) {
             stop("stim and uns not identically ordered")
           }
 
-          data_meta <- full_tbl %>%
+          data_meta <- full_tbl |>
             dplyr::select(
               SubjectID, VisitType, SampleID,
               gate_name, stim, timeToTB, Progressor
-            ) %>%
+            ) |>
             dplyr::group_by(
               SampleID, SubjectID, VisitType,
               gate_name, stim, timeToTB, Progressor
-            ) %>%
-            dplyr::slice(1) %>%
-            dplyr::ungroup() %>%
+            ) |>
+            dplyr::slice(1) |>
+            dplyr::ungroup() |>
             as.data.frame()
 
           data_meta <- purrr::map_df(rownames(data_stim), function(id) {
-            data_meta %>%
+            data_meta |>
               dplyr::filter(.data$SampleID == id)
           })
 
@@ -782,9 +782,9 @@ preprocess_cytokine_data <-
           fit$data$counts_u <- NULL
 
           fit
-        }) %>%
+        }) |>
           setNames(compass_stim)
-      }) %>%
+      }) |>
         setNames(gate_name_vec)
 
       analysispipeline::save_objects(
@@ -794,7 +794,7 @@ preprocess_cytokine_data <-
         empty = TRUE
       )
 
-      out_list <- out_list %>% append(list("compass" = compass_list))
+      out_list <- out_list |> append(list("compass" = compass_list))
     }
 
     # ==========================
@@ -885,15 +885,15 @@ preprocess_cytokine_data <-
           ex_tbl <- purrr::map(fcs_vec, function(x) {
             ex <- try(flowCore::exprs(
               flowCore::read.FCS(file.path(dir_fcs_exc_gn_fcs, x))
-            ) %>%
-              tibble::as_tibble() %>%
+            ) |>
+              tibble::as_tibble() |>
               dplyr::mutate(fcs = x))
             if (identical(class(ex), "try-error")) {
               return(NULL)
             }
             ex
-          }) %>%
-            purrr::compact() %>%
+          }) |>
+            purrr::compact() |>
             dplyr::bind_rows()
 
           # format
@@ -913,9 +913,9 @@ preprocess_cytokine_data <-
           colnames(ex_tbl) <- chnl_lab_vec_fcs[colnames(ex_tbl)]
 
           # transform columns
-          ex_tbl <- ex_tbl %>%
-            dplyr::select(-fcs) %>%
-            dplyr::mutate_all(function(x) asinh(x / 5)) %>%
+          ex_tbl <- ex_tbl |>
+            dplyr::select(-fcs) |>
+            dplyr::mutate_all(function(x) asinh(x / 5)) |>
             dplyr::mutate(fcs = ex_tbl$fcs)
 
           # get sample info from FCS name
@@ -934,16 +934,16 @@ preprocess_cytokine_data <-
             )
           })
 
-          ex_tbl <- ex_tbl %>%
-            dplyr::mutate(fcs = fcs_vec) %>%
+          ex_tbl <- ex_tbl |>
+            dplyr::mutate(fcs = fcs_vec) |>
             dplyr::left_join(sample_info_tbl)
 
           ex_tbl
-        }) %>%
-          setNames(gn_vec) %>%
+        }) |>
+          setNames(gn_vec) |>
           purrr::compact()
-      }) %>%
-        setNames(exc_vec) %>%
+      }) |>
+        setNames(exc_vec) |>
         purrr::compact()
 
       # chnls to include in tsne
@@ -957,8 +957,8 @@ preprocess_cytokine_data <-
         "Gd158Di", "Nd146Di", "Eu151Di", "Gd156Di", "Tb159Di",
         "Yb173Di", "Er170Di", "Nd142Di"
       )
-      chnl_lab_vec_fcs <- setNames(df_lab$desc %>%
-        str_remove("-beads") %>%
+      chnl_lab_vec_fcs <- setNames(df_lab$desc |>
+        str_remove("-beads") |>
         str_remove("-Beads"), df_lab$name)
       chnl_lab_vec_fcs <- chnl_lab_vec_fcs[!is.na(chnl_lab_vec_fcs)]
       chnl_lab_vec_fcs["Nd146Di"] <- "TNF"
@@ -981,9 +981,9 @@ preprocess_cytokine_data <-
             return(NULL)
           }
           readRDS(path_tsne_old)
-        }) %>%
+        }) |>
           setNames(names(ex_ag_list[[exc]]))
-      }) %>%
+      }) |>
         setNames(names(ex_ag_list))
 
       # run t-SNE plots
@@ -1013,7 +1013,7 @@ preprocess_cytokine_data <-
                 ex_tbl <- ex_tbl[, -which(colnames(ex_tbl) == cn)]
               }
             }
-            ex_mat <- ex_tbl %>% as.matrix()
+            ex_mat <- ex_tbl |> as.matrix()
             rownames(ex_mat) <- ex_ag_list[[exc]][[gn]]$fcs
 
             # apply umap
@@ -1035,7 +1035,7 @@ preprocess_cytokine_data <-
             time_tsne_total <- proc.time()[3] - time_tsne_start
             time_tsne_total
 
-            tsne_tbl <- ex_ag_list[[exc]][[gn]] %>%
+            tsne_tbl <- ex_ag_list[[exc]][[gn]] |>
               dplyr::mutate(
                 tsne1 = tsne_mat[, 1],
                 tsne2 = tsne_mat[, 2],
@@ -1067,13 +1067,13 @@ preprocess_cytokine_data <-
           }
 
           if (tsne_plot_final) {
-            plot_tbl <- tsne_tbl %>%
+            plot_tbl <- tsne_tbl |>
               dplyr::select(
                 CD33:`IFNg-beads`,
                 `Perf-beads`:CCR6,
                 CD20:CD38,
                 fcs:umap2
-              ) %>%
+              ) |>
               tidyr::pivot_longer(CD33:CD38,
                 names_to = "marker",
                 values_to = "expr"
@@ -1085,11 +1085,11 @@ preprocess_cytokine_data <-
             }
 
             p_marker_tsne <- ggplot(
-              plot_tbl %>%
+              plot_tbl |>
                 dplyr::mutate(
-                  marker = str_remove(marker, "-beads") %>%
+                  marker = str_remove(marker, "-beads") |>
                     str_remove("-Beads")
-                ) %>%
+                ) |>
                 dplyr::mutate(expr = log(pmax(expr, 0.5))),
               aes(x = tsne1, y = tsne2, col = expr)
             ) +
@@ -1113,9 +1113,9 @@ preprocess_cytokine_data <-
             )
 
             p_marker_umap <- ggplot(
-              plot_tbl %>%
-                dplyr::mutate(marker = str_remove(marker, "-beads") %>%
-                  str_remove("-Beads")) %>%
+              plot_tbl |>
+                dplyr::mutate(marker = str_remove(marker, "-beads") |>
+                  str_remove("-Beads")) |>
                 dplyr::mutate(expr = log(pmax(expr, 0.5))),
               aes(x = umap1, y = umap2, col = expr)
             ) +
@@ -1139,21 +1139,21 @@ preprocess_cytokine_data <-
             )
 
             p_prog_stim_equal_cells <- ggplot(
-              tsne_tbl %>%
+              tsne_tbl |>
                 dplyr::select(fcs:tsne2),
               aes(x = tsne1, y = tsne2)
             ) +
               coord_equal() +
               geom_hex(
                 bins = 32,
-                data = tsne_tbl %>%
-                  dplyr::select(fcs:tsne2) %>%
-                  dplyr::group_by(Progressor, stim) %>%
-                  dplyr::mutate(n_cell = n()) %>%
-                  dplyr::ungroup() %>%
-                  dplyr::mutate(min_n_cell = min(n_cell)) %>%
-                  dplyr::group_by(Progressor, stim) %>%
-                  dplyr::sample_n(min_n_cell[1]) %>%
+                data = tsne_tbl |>
+                  dplyr::select(fcs:tsne2) |>
+                  dplyr::group_by(Progressor, stim) |>
+                  dplyr::mutate(n_cell = n()) |>
+                  dplyr::ungroup() |>
+                  dplyr::mutate(min_n_cell = min(n_cell)) |>
+                  dplyr::group_by(Progressor, stim) |>
+                  dplyr::sample_n(min_n_cell[1]) |>
                   dplyr::ungroup()
               ) +
               geom_density_2d(
@@ -1169,7 +1169,7 @@ preprocess_cytokine_data <-
               labs(x = "t-SNE 1", y = "t-SNE 2")
 
             p_prog_stim_raw <- ggplot(
-              tsne_tbl %>%
+              tsne_tbl |>
                 dplyr::select(fcs:tsne2),
               aes(x = tsne1, y = tsne2)
             ) +
@@ -1188,21 +1188,21 @@ preprocess_cytokine_data <-
               labs(x = "t-SNE 1", y = "t-SNE 2")
 
             p_prog_stim_equal_cells_hex_only <- ggplot(
-              tsne_tbl %>%
+              tsne_tbl |>
                 dplyr::select(fcs:tsne2),
               aes(x = tsne1, y = tsne2)
             ) +
               coord_equal() +
               geom_hex(
                 bins = 32,
-                data = tsne_tbl %>%
-                  dplyr::select(fcs:tsne2) %>%
-                  dplyr::group_by(Progressor, stim) %>%
-                  dplyr::mutate(n_cell = n()) %>%
-                  dplyr::ungroup() %>%
-                  dplyr::mutate(min_n_cell = min(n_cell)) %>%
-                  dplyr::group_by(Progressor, stim) %>%
-                  dplyr::sample_n(min_n_cell[1]) %>%
+                data = tsne_tbl |>
+                  dplyr::select(fcs:tsne2) |>
+                  dplyr::group_by(Progressor, stim) |>
+                  dplyr::mutate(n_cell = n()) |>
+                  dplyr::ungroup() |>
+                  dplyr::mutate(min_n_cell = min(n_cell)) |>
+                  dplyr::group_by(Progressor, stim) |>
+                  dplyr::sample_n(min_n_cell[1]) |>
                   dplyr::ungroup()
               ) +
               scale_fill_viridis_c(trans = "log") +
@@ -1214,7 +1214,7 @@ preprocess_cytokine_data <-
               labs(x = "t-SNE 1", y = "t-SNE 2")
 
             p_prog_stim_raw_hex_only <- ggplot(
-              tsne_tbl %>%
+              tsne_tbl |>
                 dplyr::select(fcs:tsne2),
               aes(x = tsne1, y = tsne2)
             ) +
@@ -1229,7 +1229,7 @@ preprocess_cytokine_data <-
               labs(x = "t-SNE 1", y = "t-SNE 2")
 
             p_prog_stim_dens_only <- ggplot(
-              tsne_tbl %>%
+              tsne_tbl |>
                 dplyr::select(fcs:tsne2),
               aes(
                 x = tsne1, y = tsne2,
@@ -1297,9 +1297,9 @@ preprocess_cytokine_data <-
 
           # return output
           tsne_tbl
-        }) %>%
+        }) |>
           setNames(names(ex_ag_list[[exc]]))
-      }) %>%
+      }) |>
         setNames(names(ex_ag_list))
 
       if (tsne_save) {
@@ -1323,10 +1323,10 @@ preprocess_cytokine_data <-
       responders_list <- purrr::map(exc_vec, function(exc) {
         # create cyt_combn from exc
         if (exc != "exc-none") {
-          exc_wk <- exc %>% stringr::str_remove("exc-")
+          exc_wk <- exc |> stringr::str_remove("exc-")
           chnl_combn_exc_vec_raw <- stringr::str_split(exc_wk, "&")[[1]]
-          cyt_vec <- stats_combn_tbl$cyt_combn[1] %>%
-            stringr::str_split("&") %>%
+          cyt_vec <- stats_combn_tbl$cyt_combn[1] |>
+            stringr::str_split("&") |>
             magrittr::extract2(1)
           cyt_vec <- purrr::map_chr(cyt_vec, function(x) {
             if (!stringr::str_sub(x, end = 1) == "!") {
@@ -1354,7 +1354,7 @@ preprocess_cytokine_data <-
                   )
                 }
                 chnl_lab_vec[chnl]
-              }) %>%
+              }) |>
                 paste0(collapse = "&")
             }
           )
@@ -1375,16 +1375,16 @@ preprocess_cytokine_data <-
             UtilsCompassSV::response_prob(
               c_obj = compass_list[[stim]],
               exc = cyt_combn_exc_vec
-            ) %>%
+            ) |>
               dplyr::mutate(stim = .env$stim)
-          }) %>%
+          }) |>
             setNames(names(compass_list))
-        }) %>%
+        }) |>
           setNames(gn_vec)
-      }) %>%
+      }) |>
         setNames(exc_vec)
 
-      out_list <- out_list %>%
+      out_list <- out_list |>
         append(list("post_probs_bulk" = responders_list))
     }
 
@@ -1436,10 +1436,10 @@ preprocess_cytokine_data <-
               responders_list_resp_stim <- switch(as.character(responders_only == "r_o"),
                 "FALSE" = NULL,
                 "TRUE" = purrr::map(setdiff(stim_vec_u, "uns"), function(stim) {
-                  responders_list[[exc]][[gn]][[stim]] %>%
-                    dplyr::filter(prob > 0.75) %>%
+                  responders_list[[exc]][[gn]][[stim]] |>
+                    dplyr::filter(prob > 0.75) |>
                     magrittr::extract2("sampleid")
-                }) %>%
+                }) |>
                   setNames(setdiff(stim_vec_u, "uns")),
               )
 
@@ -1546,13 +1546,13 @@ preprocess_cytokine_data <-
                       reuse = !flowsom_plot_force,
                       chnl_lab = chnl_lab_vec_fcs,
                       chnl_sel = chnl_vec_sel,
-                      stats_combn_tbl = stats_combn_tbl %>%
+                      stats_combn_tbl = stats_combn_tbl |>
                         dplyr::filter(gate_name == gn)
                     )
                   }
 
-                  flowsom_tbl_curr <- flowsom_freq %>%
-                    dplyr::select(-c(Progressor, timeToTB)) %>%
+                  flowsom_tbl_curr <- flowsom_freq |>
+                    dplyr::select(-c(Progressor, timeToTB)) |>
                     dplyr::mutate(
                       responders_only = responders_only,
                       exc = exc, gn = gn,
@@ -1576,11 +1576,11 @@ preprocess_cytokine_data <-
                       SubjectID, VisitType,
                       n_cell_tot_stim, n_cell_cyt_stim,
                       prob, count_stim:freq_tot_bs, everything()
-                    ) %>%
+                    ) |>
                     dplyr::select(-fcs)
 
                   if (stim %in% c("all", "all_u")) {
-                    flowsom_tbl_curr <- flowsom_tbl_curr %>%
+                    flowsom_tbl_curr <- flowsom_tbl_curr |>
                       dplyr::mutate(stim = paste0(.env$stim, "-", stim))
                   }
 
@@ -1588,7 +1588,7 @@ preprocess_cytokine_data <-
                   if (!exists("flowsom_tbl")) {
                     flowsom_tbl <- flowsom_tbl_curr
                   } else {
-                    flowsom_tbl <- flowsom_tbl %>%
+                    flowsom_tbl <- flowsom_tbl |>
                       dplyr::bind_rows(flowsom_tbl_curr)
                   }
                 }
@@ -1616,7 +1616,7 @@ preprocess_cytokine_data <-
       )
     }
 
-    out_list <- out_list %>%
+    out_list <- out_list |>
       append(list("flowsom" = flowsom_tbl))
 
     # save_final

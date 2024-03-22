@@ -69,7 +69,7 @@ plot_marker_density_by_cluster <- function(flowsom_out,
                                     stim_plot,
                                     font_size,
                                     inc_exc_stim) {
-  plot_tbl <- flowsom_out %>%
+  plot_tbl <- flowsom_out |>
     dplyr::filter(
       (stim %in% stim_plot &
         .data$clust == .env$clust) |
@@ -77,7 +77,7 @@ plot_marker_density_by_cluster <- function(flowsom_out,
     )
 
   if (!inc_exc_stim) {
-    plot_tbl <- plot_tbl %>%
+    plot_tbl <- plot_tbl |>
       dplyr::filter(
         (stim %in% stim_plot &
           .data$clust != .env$clust) |
@@ -85,7 +85,7 @@ plot_marker_density_by_cluster <- function(flowsom_out,
       )
   }
 
-  plot_tbl <- plot_tbl %>%
+  plot_tbl <- plot_tbl |>
     dplyr::mutate(
       clust = ifelse(.data$clust == .env$clust,
         paste0("Cluster ", clust), "Other"
@@ -96,7 +96,7 @@ plot_marker_density_by_cluster <- function(flowsom_out,
   plot_tbl <- plot_tbl[, colnames(plot_tbl) %in%
     c("clust", marker_sel_vec)]
 
-  plot_tbl <- plot_tbl %>%
+  plot_tbl <- plot_tbl |>
     tidyr::pivot_longer(
       -clust,
       names_to = "marker",

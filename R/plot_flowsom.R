@@ -50,8 +50,8 @@ plot_flowsom <- function(flowsom_out,
   }
 
   flowsom_out %<>%
-    dplyr::mutate(stim = .data$stim %>%
-      str_remove("all_u-") %>%
+    dplyr::mutate(stim = .data$stim |>
+      str_remove("all_u-") |>
       str_remove("all-"))
 
   par_list <- attr(flowsom_out, "par")
@@ -83,7 +83,7 @@ plot_flowsom <- function(flowsom_out,
   # ------------------
 
   # get stims to plot
-  stim_vec_plot <- unique(c(as.character(flowsom_out$stim), stim)) %>%
+  stim_vec_plot <- unique(c(as.character(flowsom_out$stim), stim)) |>
     setdiff(uns_chr)
 
   # ------------------
@@ -91,7 +91,6 @@ plot_flowsom <- function(flowsom_out,
   # ------------------
 
   purrr::walk(stim_vec_plot, function(stim_curr) {
-
     # get directory to save to
     # -----------
 
@@ -164,7 +163,6 @@ plot_flowsom <- function(flowsom_out,
                           chnl_sel,
                           stim_plot,
                           dim_red = TRUE) {
-
   # =======================
   # prep
   # =======================
@@ -193,7 +191,7 @@ plot_flowsom <- function(flowsom_out,
     path_fs_freq_all
   )
 
-  flowsom_freq_sel <- flowsom_freq %>%
+  flowsom_freq_sel <- flowsom_freq |>
     dplyr::filter(stim %in% c(stim_filter_vec, "uns"))
   path_fs_freq_sel <- file.path(
     dir_save_rds, "flowsom_freq_sel.rds"
@@ -203,7 +201,7 @@ plot_flowsom <- function(flowsom_out,
     path_fs_freq_sel
   )
 
-  flowsom_freq_no_uns <- flowsom_freq_sel %>%
+  flowsom_freq_no_uns <- flowsom_freq_sel |>
     dplyr::filter(.data$stim != "uns")
   path_fs_freq_no_uns <- file.path(
     dir_save_rds, "flowsom_freq_no_uns.rds"

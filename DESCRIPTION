@@ -3,7 +3,7 @@ Type: Package
 Title: Provide functions for getting
     and analysing cytokine-positive cells
     from the ACS CyTOF data
-Version: 0.1.1
+Version: 0.1.2
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)

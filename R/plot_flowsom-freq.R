@@ -10,7 +10,6 @@ plot_freq <- function(data,
                       dir_save,
                       fill_col,
                       fill_lab) {
-
   if (dir.exists(dir_save)) {
     unlink(dir_save, recursive = TRUE)
   }
@@ -36,11 +35,11 @@ plot_freq <- function(data,
     x_dodge = x_dodge_vec,
     trans_y = trans_vec_y,
     y = y_vec
-  ) %>%
-    dplyr::as_tibble() %>%
+  ) |>
+    dplyr::as_tibble() |>
     dplyr::mutate_all(as.character)
 
-  arg_tbl <- arg_tbl %>%
+  arg_tbl <- arg_tbl |>
     dplyr::filter(!(trans_y == "asn" & facet_scale == "fixed"))
 
   # plot
@@ -111,15 +110,13 @@ plot_freq <- function(data,
                        trans_y = "identity",
                        n_col = NULL,
                        height,
-                       width
-                       ) {
-
+                       width) {
   # create base plot to be faceted later in a variety
   # of ways
   path_rds <- saver::save_rds_eval(
     fn_or_call = .plot_freq_rds,
     .data = .data,
-    filename =  paste0("p-", y, "-", facet_scale),
+    filename = paste0("p-", y, "-", facet_scale),
     dir_save = dir_save,
     return_obj = FALSE,
     eval = FALSE,
@@ -148,7 +145,7 @@ plot_freq <- function(data,
 
   purrr::walk(c("pdf", "png"), function(gd) {
     cowplot::ggsave2(
-      filename = stringr::str_remove(path_rds, ".rds$") %>%
+      filename = stringr::str_remove(path_rds, ".rds$") |>
         paste0(".", gd),
       plot = p,
       height = height,
@@ -183,19 +180,19 @@ plot_freq <- function(data,
     data = .data,
     mapping = aes(x = .data[[x]], y = .data[[y]])
   ) +
-  cowplot::theme_cowplot(font_size = font_size) +
+    cowplot::theme_cowplot(font_size = font_size) +
     geom_hline(yintercept = 0) +
     cowplot::background_grid(major = "y") +
     switch(as.character(is.null(x_dodge)),
       "TRUE" = geom_boxplot(
-          aes(fill = .data[[.fill]]),
-          outlier.size = -1
-          ),
+        aes(fill = .data[[.fill]]),
+        outlier.size = -1
+      ),
       "FALSE" = geom_boxplot(
-          aes(fill = .data[[.fill]]),
-          outlier.size = -1,
-          position = "dodge"
-          )
+        aes(fill = .data[[.fill]]),
+        outlier.size = -1,
+        position = "dodge"
+      )
     ) +
     switch(as.character(is.null(x_dodge)),
       "TRUE" = geom_point(size = 0.5),
@@ -208,7 +205,7 @@ plot_freq <- function(data,
     scale_fill_manual(
       values = fill_col,
       labels = fill_lab
-      ) +
+    ) +
     theme(
       axis.text.x = element_blank(),
       axis.ticks.x = element_blank(),
