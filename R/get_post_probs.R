@@ -66,8 +66,10 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
     # identify what pre-specified cytokine combinations are
     exc_cyt_single_vec <- purrr::map(stringr::str_split(exc, "_")[[1]], function(x) {
       chnl_vec <- names(chnl_lab_cyt_fcs)
-      for (chnl in chnl_vec) if (str_detect(x, chnl)) {
-        return(chnl)
+      for (chnl in chnl_vec) {
+        if (str_detect(x, chnl)) {
+          return(chnl)
+        }
       }
       NULL
     }) |>
@@ -107,7 +109,9 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
 
 
     for (cyt_combn in exc_cyt_combn_vec) {
-      ds %<>% dplyr::filter(!.data$cyt_combn == .env$cyt_combn)
+      ds <- ds |> dplyr::filter(
+        !.data$cyt_combn == .env$cyt_combn
+      )
     }
 
     # remove all-negative cytokine combination
@@ -117,17 +121,17 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
     all_neg_cyt_combn <- paste0("!", paste0(cyt_vec, collapse = "&!"))
 
     # remove all-negative cytokine combination
-    ds %<>% dplyr::filter(!.data$cyt_combn == all_neg_cyt_combn)
+    ds <- ds |> dplyr::filter(!.data$cyt_combn == all_neg_cyt_combn)
 
     # create SampleID column
-    ds %<>%
+    ds <- ds |>
       dplyr::mutate(SampleID = paste0(SubjectID, "_", VisitType))
 
     # prepare count data for MIMOSA
     # ---------------------------
 
     # calculate summed counts
-    ds %<>%
+    ds <- ds |>
       group_by(
         gate_name, SampleID, SubjectID, VisitType, stim, n_cell_stim,
         n_cell_uns
@@ -139,7 +143,7 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
       )
 
     # calculate count_pos and count_neg columns
-    ds %<>%
+    ds <- ds |>
       dplyr::rename(stim_old = stim) |>
       tidyr::pivot_longer(n_cell_stim:n_cell_uns,
         names_to = "stim",
@@ -163,12 +167,12 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
     # ---------------------------
 
     # add feature variable (neeed for MIMOSA)
-    ds %<>%
+    ds <- ds |>
       dplyr::mutate(feature = "any_pos_but_exc") |>
       dplyr::select(feature, everything())
 
     # create ag column
-    ds %<>%
+    ds <- ds |>
       dplyr::mutate(ag = setdiff(stim, uns_chr))
 
     # create MIMOSA expression set

@@ -24,7 +24,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
     dplyr::mutate(stim = uns_chr)
 
   # bind stim and uns sample counts together
-  cell_count_tbl %<>%
+  cell_count_tbl <- cell_count_tbl |>
     dplyr::bind_rows(cell_count_tbl_uns) |>
     dplyr::select(SubjectID, VisitType, stim, n_cell) |>
     dplyr::mutate(sampleid_stim = paste0(SubjectID, "_", VisitType, "_", stim))
@@ -33,7 +33,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
   cell_count_lab_vec <- setNames(cell_count_tbl$n_cell, cell_count_tbl$sampleid_stim)
 
   # add SubjectID_VisitType_stim column to flowsom_out
-  flowsom_out %<>%
+  flowsom_out <- flowsom_out |>
     dplyr::mutate(SampleID_Stim = paste0(SubjectID, "_", VisitType, "_", stim))
 
   # ------------------
@@ -84,7 +84,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
           # as the sample was a responder for this stim (if filtering
           # was done by responder status)
           if (!clust %in% flowsom_out_freq_subjectid_visittype$clust) {
-            flowsom_out_freq %<>%
+            flowsom_out_freq <- flowsom_out_freq |>
               dplyr::bind_rows(flowsom_out_freq_subjectid_visittype[1, ] |>
                 dplyr::mutate(
                   count_stim = 0, freq_cyt_stim = 0, freq_tot_stim = 0, clust = .env$clust,
@@ -122,7 +122,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
         freq_tot_bs = freq_tot_stim - freq_tot_uns
       )
   } else {
-    flowsom_out_freq %<>%
+    flowsom_out_freq <- flowsom_out_freq |>
       dplyr::mutate(
         n_cell_tot_uns = NA,
         n_cell_cyt_uns = NA,
@@ -139,7 +139,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
 
   # convert mtb to mtbaux if mtbaux is what's in flowsom_out
   if ("mtbaux" %in% flowsom_out_freq$stim) {
-    flowsom_out_freq %<>% dplyr::mutate(stim = ifelse(stim == "mtbaux", "mtb", stim))
+    flowsom_out_freq <- flowsom_out_freq |> dplyr::mutate(stim = ifelse(stim == "mtbaux", "mtb", stim))
   }
 
   # get order vector (assuming unstim is available)
@@ -150,12 +150,13 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
   )
 
   # remove unstim if it is available
-  if (!"uns" %in% flowsom_out_freq$stim) stim_order_vec %<>% setdiff("uns")
-
+  if (!"uns" %in% flowsom_out_freq$stim) {
+    stim_order_vec <- stim_order_vec |> setdiff("uns")
+  }
   # make stim and cluster factors
   stim_factor_vec <- factor(flowsom_out_freq$stim, stim_order_vec)
 
-  flowsom_out_freq %<>%
+  flowsom_out_freq <- flowsom_out_freq |>
     dplyr::mutate(
       stim = stim_factor_vec,
       clust = factor(as.character(clust), levels = as.character(sort(as.numeric(unique(clust)))))
@@ -163,7 +164,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
 
 
   # arrange
-  flowsom_out_freq %<>% dplyr::arrange(SubjectID, VisitType, stim, clust)
+  flowsom_out_freq <- flowsom_out_freq |> dplyr::arrange(SubjectID, VisitType, stim, clust)
 
   if (!is.null(dir_save_cluster_results)) {
     path_fn <- file.path(dir_save_cluster_results, "fs_freq.rds")

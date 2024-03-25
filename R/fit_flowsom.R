@@ -181,7 +181,7 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
   # -----------
 
   # get file name for each cell
-  flowsom_out %<>% dplyr::mutate(fcs = NA_character_)
+  flowsom_out <- flowsom_out |> dplyr::mutate(fcs = NA_character_)
   for (i in seq_along(meta)) {
     fn_long <- names(meta)[i]
     slash_loc_tbl <- str_locate_all(fn_long, "/")[[1]]
@@ -208,7 +208,7 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
   })
 
   # bind onto flowsom data
-  flowsom_out %<>% dplyr::left_join(sample_info_tbl, by = c("fcs"))
+  flowsom_out <- flowsom_out |> dplyr::left_join(sample_info_tbl, by = c("fcs"))
 
   # rename columns in flowsom_out
   # ---------------------------
@@ -228,7 +228,7 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
   # -------------------------
 
   if (!is.null(jacc_lab_vec)) {
-    flowsom_out %<>%
+    flowsom_out <- flowsom_out |>
       dplyr::mutate(stability = jacc_lab_vec[clust])
   }
 
@@ -245,19 +245,19 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
       dplyr::filter(stim == stim_tsne)
 
     # create cell_ind column in flowsom_out
-    flowsom_out %<>%
+    flowsom_out <- flowsom_out |>
       dplyr::group_by(SubjectID, VisitType, stim) |>
       dplyr::mutate(cell_ind = 1:n()) |>
       dplyr::ungroup()
 
     # create cell_ind column in tsne_tbl
-    tsne_tbl_curr %<>%
+    tsne_tbl_curr <- tsne_tbl_curr |>
       dplyr::group_by(SubjectID, VisitType) |>
       dplyr::mutate(cell_ind = 1:n()) |>
       dplyr::ungroup()
 
     # bind flowsom and tsne tbls together (umap assumed here)
-    flowsom_out %<>%
+    flowsom_out <- flowsom_out |>
       dplyr::left_join(
         tsne_tbl_curr |>
           dplyr::select(SubjectID, VisitType, cell_ind, tsne1, tsne2, umap1, umap2),
@@ -288,7 +288,7 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
 
   # convert mtb to mtbaux if mtbaux is what's in flowsom_out
   if ("mtbaux" %in% flowsom_out$stim) {
-    flowsom_out %<>% dplyr::mutate(stim = ifelse(stim == "mtbaux", "mtb", stim))
+    flowsom_out <- flowsom_out |> dplyr::mutate(stim = ifelse(stim == "mtbaux", "mtb", stim))
   }
 
   # get order vector (assuming unstim is available)
@@ -299,19 +299,21 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
   )
 
   # remove unstim if it is available
-  if (!"uns" %in% flowsom_out$stim) stim_order_vec %<>% setdiff("uns")
+  if (!"uns" %in% flowsom_out$stim) {
+    stim_order_vec <- stim_order_vec |> setdiff("uns")
+  }
 
   # make stim and cluster factors
   stim_factor_vec <- factor(flowsom_out$stim, stim_order_vec)
 
-  flowsom_out %<>%
+  flowsom_out <- flowsom_out |>
     dplyr::mutate(
       stim = stim_factor_vec,
       clust = factor(as.character(clust), levels = as.character(sort(as.numeric(unique(clust)))))
     )
 
   # arrange
-  flowsom_out %<>% dplyr::arrange(SubjectID, VisitType, stim, clust, cell_ind)
+  flowsom_out <- flowsom_out |> dplyr::arrange(SubjectID, VisitType, stim, clust, cell_ind)
 
   flowsom_out
 }

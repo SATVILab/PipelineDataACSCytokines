@@ -256,7 +256,7 @@ plot_clust_map <- function(flowsom_out,
         dplyr::filter(.data$clust == .env$clust)
 
       if (!stim_plot %in% c("all", "all_u")) {
-        flowsom_out_long_clust %<>%
+        flowsom_out_long_clust <- flowsom_out_long_clust |>
           dplyr::filter(stim %in% stim_plot)
       }
 

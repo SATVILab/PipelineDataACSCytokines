@@ -49,7 +49,7 @@ plot_flowsom <- function(flowsom_out,
     }
   }
 
-  flowsom_out %<>%
+  flowsom_out <- flowsom_out |>
     dplyr::mutate(stim = .data$stim |>
       str_remove("all_u-") |>
       str_remove("all-"))

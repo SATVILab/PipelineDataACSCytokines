@@ -26,10 +26,8 @@
 #'
 #' @importFrom flowCore exprs exprs<-
 #' @importFrom rlang !!
-#' @importFrom magrittr |> %<>%
 #' @import stringr
 #' @import ggplot2
-#' @import dplyr
 preprocess_cytokine_data <-
   function(path_faust_dir,
            path_output,
@@ -490,7 +488,7 @@ preprocess_cytokine_data <-
         pos_ind_vec <- rep(NA, length(chnl_vec))
         cco_rem <- cco
         for (i in seq_along(chnl_vec)) {
-          cco_rem %<>% str_remove(chnl_vec[i])
+          cco_rem <- cco_rem |> str_remove(chnl_vec[i])
           pos_ind_vec[i] <- str_sub(cco_rem, 2 + (i - 1) * 3, 2 + (i - 1) * 3)
         }
         pos_ind_lab_vec <- setNames(c("&", "&!"), c("+", "-"))
@@ -1560,16 +1558,16 @@ preprocess_cytokine_data <-
                     )
 
                   if (!is.null(flowsom_cluster_post_probs)) {
-                    flowsom_tbl_curr %<>%
+                    flowsom_tbl_curr <- flowsom_tbl_curr |>
                       dplyr::left_join(
                         flowsom_cluster_post_probs,
                         by = c("clust", "stim", "SubjectID", "VisitType")
                       )
                   } else {
-                    flowsom_tbl_curr %<>% dplyr::mutate(prob = NA)
+                    flowsom_tbl_curr <- flowsom_tbl_curr |> dplyr::mutate(prob = NA)
                   }
 
-                  flowsom_tbl_curr %<>%
+                  flowsom_tbl_curr <- flowsom_tbl_curr |>
                     dplyr::select(
                       responders_only:n_clust, stim,
                       clust, stability,

@@ -3,7 +3,7 @@ Type: Package
 Title: Provide functions for getting
     and analysing cytokine-positive cells
     from the ACS CyTOF data
-Version: 0.1.2
+Version: 0.1.3
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -16,4 +16,9 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-    here
+    here,
+    ggplot2,
+    rlang,
+    flowCore,
+    dplyr,
+    stringr
