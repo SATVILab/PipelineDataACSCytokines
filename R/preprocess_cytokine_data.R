@@ -229,7 +229,6 @@ preprocess_cytokine_data <-
         bias_uns = 0.15, # original is 5/200
         min_bw = 0.3, # original is 7/200
         cp_min = 0,
-        remove_beads = FALSE,
         boot_n = NULL,
         ind_skip = NULL,
         cytof_fcs_to_clin_map = NULL,
