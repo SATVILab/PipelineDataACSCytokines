@@ -17,7 +17,7 @@ get_faust_cyt_pos <- function(dir_faust,
 
   # helps go from batch id to faust directory containing
   # annotations for each sample
-  tidy_to_faust_fcs <- setNames(
+  tidy_to_faust_fcs <- stats::setNames(
     fcs_vec_faust,
     DataTidyACSCyTOFFAUST::clean_fcs_for_matching(fcs_vec_faust)
   )
@@ -95,7 +95,7 @@ get_faust_cyt_pos <- function(dir_faust,
     combn_ind_pos_list <- purrr::map(seq_len(length(chnl)), function(n_pos) {
       gtools::combinations(n = n_chnl, r = n_pos)
     }) |>
-      setNames(seq_len(length(chnl)))
+      stats::setNames(seq_len(length(chnl)))
     n_combn <- purrr::map_dbl(combn_ind_pos_list, nrow) |>
       sum()
     combn_nm_list <- purrr::map(names(combn_ind_pos_list), function(n_pos_nm) {
@@ -109,7 +109,7 @@ get_faust_cyt_pos <- function(dir_faust,
           paste0(collapse = "")
       })
     }) |>
-      setNames(names(combn_ind_pos_list))
+      stats::setNames(names(combn_ind_pos_list))
 
 
     # loop over batches (just to make sure you load unstim correctly)
@@ -407,7 +407,7 @@ get_faust_cyt_pos <- function(dir_faust,
 
           pheno
         }) |>
-          setNames(pheno_vec_uni)
+          stats::setNames(pheno_vec_uni)
         ann_tbl <- ann_tbl |>
           dplyr::mutate(
             pheno = long_to_short_pheno[pheno]

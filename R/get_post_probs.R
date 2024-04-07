@@ -81,7 +81,7 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
       stringr::str_split("&") |>
       magrittr::extract2(1)
 
-    cyt_lab_cyt_vec <- setNames(
+    cyt_lab_cyt_vec <- stats::setNames(
       names(chnl_lab_cyt_custom),
       chnl_lab_cyt_custom
     )
@@ -221,7 +221,7 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
     visittype_vec <- str_sub(sampleid_vec, end = slash_loc_tbl - 1)
 
     # get named vector of posterior probabilities per sample
-    post_prob_lab_vec <- setNames(post_prob_vec, paste0(subjectid_vec, "_", visittype_vec))
+    post_prob_lab_vec <- stats::setNames(post_prob_vec, paste0(subjectid_vec, "_", visittype_vec))
 
     # get sampleids with post probs that exceed minimum
     r_o_sampleid_vec <- names(post_prob_lab_vec)[post_prob_lab_vec > post_prob_min]
@@ -231,7 +231,7 @@ get_post_probs <- function(stats_combn_tbl, stim, exc,
       "responders" = r_o_sampleid_vec
     )
   }) |>
-    setNames(stim)
+    stats::setNames(stim)
 
   # add minimum posterior probability to count as a responder here
   attr(out_list, "pars") <- list("post_prob_min" = post_prob_min)

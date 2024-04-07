@@ -45,7 +45,7 @@ load_fs_for_flowsom <- function(dir_fcs, stim, stim_vec_u = NULL, responders_lis
       list.files(dir_fcs, pattern = paste0(stim_ind, "aux.fcs"))
     )
   }) |>
-    setNames(stim_vec_load)
+    stats::setNames(stim_vec_load)
 
   # return an error if none are found that match the pattern
   if (length(unlist(fcs_list)) == 0) stop(paste0("no FCS files found that match pattern in ", dir_fcs))

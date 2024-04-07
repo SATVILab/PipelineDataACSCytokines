@@ -142,11 +142,11 @@ plot_dim_red <- function(flowsom_out,
       aes(alpha = clust),
       size = 0.25, show.legend = FALSE
     ) +
-    scale_colour_manual(values = setNames(
+    scale_colour_manual(values = stats::setNames(
       c(col_clust, "gray75"),
       c(paste0("Cluster ", clust), "Other")
     )) +
-    scale_alpha_manual(values = setNames(
+    scale_alpha_manual(values = stats::setNames(
       c(0.4, 0.75),
       c(paste0("Cluster ", clust), "Other")
     )) +

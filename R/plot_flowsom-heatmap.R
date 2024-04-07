@@ -90,9 +90,9 @@ get_ecdf_list <- function(flowsom_out, chnl_lab, chnl_sel) {
         dplyr::filter(.data$marker == .env$marker) |>
         dplyr::pull(expr))
     }) |>
-      setNames(chnl_lab[chnl_sel])
+      stats::setNames(chnl_lab[chnl_sel])
   }) |>
-    setNames(unique(flowsom_out_long$clust))
+    stats::setNames(unique(flowsom_out_long$clust))
 }
 
 #' @title Plot heat map of marker expression per cluster
@@ -313,11 +313,11 @@ plot_clust_map <- function(flowsom_out,
     dplyr::select(clust, stability) |>
     dplyr::ungroup()
 
-  stability_lab_vec <- setNames(
+  stability_lab_vec <- stats::setNames(
     round(stability_tbl$stability, 2), stability_tbl$clust
   )
   if (stability_show) {
-    x_text_lab_vec <- setNames(
+    x_text_lab_vec <- stats::setNames(
       paste0(
         order_vec_cluster, "\n(", stability_lab_vec[order_vec_cluster], ")"
       ),

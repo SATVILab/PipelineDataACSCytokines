@@ -30,7 +30,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
     dplyr::mutate(sampleid_stim = paste0(SubjectID, "_", VisitType, "_", stim))
 
   # get vector id for sampleid and stim combination
-  cell_count_lab_vec <- setNames(cell_count_tbl$n_cell, cell_count_tbl$sampleid_stim)
+  cell_count_lab_vec <- stats::setNames(cell_count_tbl$n_cell, cell_count_tbl$sampleid_stim)
 
   # add SubjectID_VisitType_stim column to flowsom_out
   flowsom_out <- flowsom_out |>
@@ -64,7 +64,7 @@ get_fs_cluster_freq <- function(flowsom_out, uns_chr = "uns", dir_save_cluster_r
     dplyr::slice(1) |>
     dplyr::select(clust, stability) |>
     dplyr::ungroup()
-  stability_lab_vec <- setNames(stability_tbl$stability, stability_tbl$clust)
+  stability_lab_vec <- stats::setNames(stability_tbl$stability, stability_tbl$clust)
 
   # loop over stimulations in flowsom_out_freq
   # to ensure that only people who responded to a particular stimulation

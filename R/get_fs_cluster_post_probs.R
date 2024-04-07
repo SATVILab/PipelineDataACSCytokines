@@ -99,10 +99,10 @@ get_fs_cluster_post_probs <- function(flowsom_freq = flowsom_freq,
         # mutate(SampleID = paste0(SubjectID, '_', VisitType)) |>
         dplyr::group_by(SubjectID) |>
         dplyr::slice(1)
-      prog_lab_vec <- setNames(prog_lab_tbl$Progressor, prog_lab_tbl$SubjectID)
+      prog_lab_vec <- stats::setNames(prog_lab_tbl$Progressor, prog_lab_tbl$SubjectID)
 
       # get named vector of posterior probabilities per sample
-      post_prob_lab_vec <- setNames(post_prob_vec, paste0(subjectid_vec, "_", visittype_vec))
+      post_prob_lab_vec <- stats::setNames(post_prob_vec, paste0(subjectid_vec, "_", visittype_vec))
 
       # get sampleids with post probs that exceed minimum
       # r_o_sampleid_vec <- names(post_prob_lab_vec)[post_prob_lab_vec > post_prob_min]

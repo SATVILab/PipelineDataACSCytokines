@@ -136,7 +136,7 @@ fit_flowsom <- function(fs, n_clust, scale, chnl_sel, ds_name, dir_save_base,
       dplyr::summarise(jacc_mean = mean(jacc[jacc >= 0]))
 
     # get labelling vector for matching clusters to stability
-    jacc_lab_vec <- setNames(
+    jacc_lab_vec <- stats::setNames(
       jacc_tbl_mean$jacc_mean,
       jacc_tbl_mean$cluster
     )

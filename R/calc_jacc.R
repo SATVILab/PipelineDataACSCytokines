@@ -144,7 +144,7 @@ calc_jacc <- function(fs, fsom_orig, scale,
       # print(clusters_in_boot_sample_vec[which(jacc_vec_boot == max(jacc_vec_boot))[1]])
       max(jacc_vec_boot)
     }) |>
-      setNames(clusters_in_boot_sample_vec)
+      stats::setNames(clusters_in_boot_sample_vec)
 
     # jaccard coefficient set to -1 for clusters not in bootstrapped
     # dataset
@@ -156,7 +156,7 @@ calc_jacc <- function(fs, fsom_orig, scale,
     for (i in seq_along(clusters_not_in_boot_sample_vec)) {
       jc_vec <- c(
         jc_vec,
-        setNames(-1, clusters_not_in_boot_sample_vec[i])
+        stats::setNames(-1, clusters_not_in_boot_sample_vec[i])
       )
     }
 

@@ -109,7 +109,7 @@ preprocess_cytokine_data <-
       "Er168Di", "Dy161Di", "Gd160Di", "Nd148Di",
       "Er166Di"
     )
-    marker_2d_vec <- setNames(
+    marker_2d_vec <- stats::setNames(
       rep(1, length(marker_2d_vec)),
       marker_2d_vec
     )
@@ -205,9 +205,9 @@ preprocess_cytokine_data <-
     })
 
     fcs_vec_gs <- fcs_stim_tbl$fcs
-    fcs_lab_vec <- setNames(fcs_stim_tbl$fcs, seq_len(nrow(fcs_stim_tbl)))
-    sampleid_lab_vec <- setNames(fcs_stim_tbl$fcs, seq_len(nrow(fcs_stim_tbl)))
-    stim_lab_vec <- setNames(fcs_stim_tbl$stim, seq_len(nrow(fcs_stim_tbl)))
+    fcs_lab_vec <- stats::setNames(fcs_stim_tbl$fcs, seq_len(nrow(fcs_stim_tbl)))
+    sampleid_lab_vec <- stats::setNames(fcs_stim_tbl$fcs, seq_len(nrow(fcs_stim_tbl)))
+    stim_lab_vec <- stats::setNames(fcs_stim_tbl$stim, seq_len(nrow(fcs_stim_tbl)))
 
     # ========================
     # Identify gates
@@ -491,20 +491,20 @@ preprocess_cytokine_data <-
           cco_rem <- cco_rem |> str_remove(chnl_vec[i])
           pos_ind_vec[i] <- str_sub(cco_rem, 2 + (i - 1) * 3, 2 + (i - 1) * 3)
         }
-        pos_ind_lab_vec <- setNames(c("&", "&!"), c("+", "-"))
+        pos_ind_lab_vec <- stats::setNames(c("&", "&!"), c("+", "-"))
         cyt_combn_rep_end <- paste0(
           pos_ind_lab_vec[pos_ind_vec[-1]],
           chnl_lab_vec[chnl_vec[-1]],
           sep = "", collapse = ""
         )
         cyt_combn_rep_start <- paste0(
-          setNames(c("", "!"), c("+", "-"))[pos_ind_vec[1]],
+          stats::setNames(c("", "!"), c("+", "-"))[pos_ind_vec[1]],
           chnl_lab_vec[chnl_vec[1]]
         )
         paste0(cyt_combn_rep_start, cyt_combn_rep_end)
       }
     ) |>
-      setNames(unique(stats_combn_tbl$cyt_combn))
+      stats::setNames(unique(stats_combn_tbl$cyt_combn))
 
     stats_combn_tbl <- stats_combn_tbl |>
       dplyr::mutate(
@@ -781,9 +781,9 @@ preprocess_cytokine_data <-
 
           fit
         }) |>
-          setNames(compass_stim)
+          stats::setNames(compass_stim)
       }) |>
-        setNames(gate_name_vec)
+        stats::setNames(gate_name_vec)
 
       analysispipeline::save_objects(
         "compass" = compass_list,
@@ -805,7 +805,7 @@ preprocess_cytokine_data <-
 
     # channel label vectors
     df_lab <- flowCore::parameters(flowWorkspace::gh_pop_get_data(gs[[1]]))@data
-    chnl_lab_vec_fcs <- setNames(df_lab$desc, df_lab$name)
+    chnl_lab_vec_fcs <- stats::setNames(df_lab$desc, df_lab$name)
     chnl_lab_vec_fcs <- chnl_lab_vec_fcs[!is.na(chnl_lab_vec_fcs)]
 
     # get exclusion options for downstream t-SNE,
@@ -938,10 +938,10 @@ preprocess_cytokine_data <-
 
           ex_tbl
         }) |>
-          setNames(gn_vec) |>
+          stats::setNames(gn_vec) |>
           purrr::compact()
       }) |>
-        setNames(exc_vec) |>
+        stats::setNames(exc_vec) |>
         purrr::compact()
 
       # chnls to include in tsne
@@ -955,13 +955,13 @@ preprocess_cytokine_data <-
         "Gd158Di", "Nd146Di", "Eu151Di", "Gd156Di", "Tb159Di",
         "Yb173Di", "Er170Di", "Nd142Di"
       )
-      chnl_lab_vec_fcs <- setNames(df_lab$desc |>
+      chnl_lab_vec_fcs <- stats::setNames(df_lab$desc |>
         str_remove("-beads") |>
         str_remove("-Beads"), df_lab$name)
       chnl_lab_vec_fcs <- chnl_lab_vec_fcs[!is.na(chnl_lab_vec_fcs)]
       chnl_lab_vec_fcs["Nd146Di"] <- "TNF"
       chnl_lab_vec_fcs["Lu175Di"] <- "Perforin"
-      chnl_lab_vec_fcs_no_adj <- setNames(df_lab$desc, df_lab$name)
+      chnl_lab_vec_fcs_no_adj <- stats::setNames(df_lab$desc, df_lab$name)
       chnl_lab_vec_fcs <- chnl_lab_vec_fcs[!is.na(chnl_lab_vec_fcs)]
       marker_vec_sel <- chnl_lab_vec_fcs[chnl_vec_sel]
 
@@ -980,9 +980,9 @@ preprocess_cytokine_data <-
           }
           readRDS(path_tsne_old)
         }) |>
-          setNames(names(ex_ag_list[[exc]]))
+          stats::setNames(names(ex_ag_list[[exc]]))
       }) |>
-        setNames(names(ex_ag_list))
+        stats::setNames(names(ex_ag_list))
 
       # run t-SNE plots
       # ------------------
@@ -1296,9 +1296,9 @@ preprocess_cytokine_data <-
           # return output
           tsne_tbl
         }) |>
-          setNames(names(ex_ag_list[[exc]]))
+          stats::setNames(names(ex_ag_list[[exc]]))
       }) |>
-        setNames(names(ex_ag_list))
+        stats::setNames(names(ex_ag_list))
 
       if (tsne_save) {
         analysispipeline::save_objects(
@@ -1332,7 +1332,7 @@ preprocess_cytokine_data <-
             }
             stringr::str_sub(x, start = 2)
           })
-          marker_lab_vec_cyt <- setNames(
+          marker_lab_vec_cyt <- stats::setNames(
             names(chnl_lab_vec), chnl_lab_vec
           )
           chnl_vec <- marker_lab_vec_cyt[cyt_vec]
@@ -1376,11 +1376,11 @@ preprocess_cytokine_data <-
             ) |>
               dplyr::mutate(stim = .env$stim)
           }) |>
-            setNames(names(compass_list))
+            stats::setNames(names(compass_list))
         }) |>
-          setNames(gn_vec)
+          stats::setNames(gn_vec)
       }) |>
-        setNames(exc_vec)
+        stats::setNames(exc_vec)
 
       out_list <- out_list |>
         append(list("post_probs_bulk" = responders_list))
@@ -1395,7 +1395,7 @@ preprocess_cytokine_data <-
 
       stim_vec_u <- c("p1", "mtb", "ebv", "p4", "uns")
       if (flowsom_p4_exc) stim_vec_u <- stim_vec_u[!stim_vec_u == "p4"]
-      marker_lab_vec_fcs <- setNames(names(chnl_lab_vec_fcs), chnl_lab_vec_fcs)
+      marker_lab_vec_fcs <- stats::setNames(names(chnl_lab_vec_fcs), chnl_lab_vec_fcs)
 
       responders_only <- flowsom_r_o[1]
       for (responders_only in flowsom_r_o) {
@@ -1438,7 +1438,7 @@ preprocess_cytokine_data <-
                     dplyr::filter(prob > 0.75) |>
                     magrittr::extract2("sampleid")
                 }) |>
-                  setNames(setdiff(stim_vec_u, "uns")),
+                  stats::setNames(setdiff(stim_vec_u, "uns")),
               )
 
               # load flowSet
