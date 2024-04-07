@@ -36,7 +36,7 @@ plot_freq <- function(data,
     trans_y = trans_vec_y,
     y = y_vec
   ) |>
-    dplyr::tibble::as_tibble() |>
+    tibble::as_tibble() |>
     dplyr::mutate_all(as.character)
 
   arg_tbl <- arg_tbl |>
