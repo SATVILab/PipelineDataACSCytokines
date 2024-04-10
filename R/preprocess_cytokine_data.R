@@ -231,7 +231,6 @@ preprocess_cytokine_data <-
         cp_min = 0,
         boot_n = NULL,
         ind_skip = NULL,
-        cytof_fcs_to_clin_map = NULL,
         fcs = fcs_vec_gs,
         max_pos_prob_x = 5,
         gate_quant = gate_quant_list,
@@ -339,7 +338,6 @@ preprocess_cytokine_data <-
             ind_in_batch_lab_vec = ind_in_batch_lab_vec,
             gate_name = gn,
             ind_in_batch_gate = 1:5,
-            cytof_fcs_to_clin_map = NULL,
             ind_in_batch_uns = 5,
             gate_tbl = gate_tbl,
             gate_uns = TRUE,
@@ -387,7 +385,6 @@ preprocess_cytokine_data <-
               ind_in_batch_lab_vec = ind_in_batch_lab_vec,
               gate_name = gate_name,
               ind_in_batch_gate = 1:5,
-              cytof_fcs_to_clin_map = NULL,
               ind_in_batch_uns = 5
             ) |>
               dplyr::mutate(mult = mult)

@@ -81,7 +81,6 @@ get_faust_cyt_pos <- function(dir_faust,
 
     ind_batch_list <- outliergatev1:::.get_ind_batch_list(
       data = gs, batch_size = 5,
-      cytof_fcs_to_clin_map = NULL,
       fcs = fcs_stim_tbl$fcs
     )
 
