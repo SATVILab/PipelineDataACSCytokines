@@ -215,7 +215,7 @@ preprocess_cytokine_data <-
 
     if (gate || stats_only || plots_only) {
       message("gating")
-      outliergatev1:::gate(
+      stimgate:::gate(
         data = gs,
         data_name = gs_nm,
         pop_gate = pop_gate,
@@ -256,7 +256,7 @@ preprocess_cytokine_data <-
     chnl_lab <- UtilsCytoRSV::chnl_lab(
       flowWorkspace::gh_pop_get_data(gs[[1]])
     )
-    ind_batch_list <- outliergatev1:::.get_ind_batch_list(
+    ind_batch_list <- stimgate:::.get_ind_batch_list(
       data = gs, batch_size = 5, fcs = fcs_vec_gs
     )
     params_env <- list(
@@ -269,7 +269,7 @@ preprocess_cytokine_data <-
       ind_batch_list = ind_batch_list,
       data = gs
     )
-    path_base <- outliergatev1:::.create_dir_base(
+    path_base <- stimgate:::.create_dir_base(
       params = params_env |>
         append(list(cut = marker_list[[1]]$cut)),
       dir_base_init = file.path(
@@ -329,7 +329,7 @@ preprocess_cytokine_data <-
       message("saving cyt+ FCS files")
       purrr::walk(combn_exc_list, function(combn_exc) {
         purrr::walk(gate_name_vec, function(gn) {
-          outliergatev1:::get_stim_pos_fcs(
+          stimgate:::get_stim_pos_fcs(
             data = gs,
             data_name = gs_nm,
             dir_base = path_base,
@@ -376,7 +376,7 @@ preprocess_cytokine_data <-
           print(chnl_vec)
           purrr::map_df(mult_vec, function(mult) {
             print(mult)
-            outliergatev1:::get_hladr_med_diff(
+            stimgate:::get_hladr_med_diff(
               data = gs,
               data_name = gs_nm,
               pop_gate = pop_gate,

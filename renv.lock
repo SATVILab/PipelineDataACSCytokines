@@ -2922,37 +2922,6 @@
       ],
       "Hash": "58660c4351f9e82c68132df455468b97"
     },
-    "outliergatev1": {
-      "Package": "outliergatev1",
-      "Version": "0.1.0.9002",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "outliergatev1",
-      "RemoteUsername": "SATVILab",
-      "RemotePkgRef": "SATVILab/outliergatev1",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "8b68db87c62c7ba41f96d5e958ea8978c5b3ec85",
-      "Requirements": [
-        "CytoML",
-        "R",
-        "cowplot",
-        "dplyr",
-        "flowCore",
-        "flowWorkspace",
-        "ggplot2",
-        "ggrepel",
-        "magrittr",
-        "ncdfFlow",
-        "openCyto",
-        "purrr",
-        "rlang",
-        "stringr",
-        "tibble",
-        "tidyr"
-      ],
-      "Hash": "64610bf947eb5da0a97c332a4d57c30c"
-    },
     "pbkrtest": {
       "Package": "pbkrtest",
       "Version": "0.5.2",

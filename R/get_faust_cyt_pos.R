@@ -79,7 +79,7 @@ get_faust_cyt_pos <- function(dir_faust,
       tibble::tibble(fcs = fcs, stim = stim)
     })
 
-    ind_batch_list <- outliergatev1:::.get_ind_batch_list(
+    ind_batch_list <- stimgate:::.get_ind_batch_list(
       data = gs, batch_size = 5,
       fcs = fcs_stim_tbl$fcs
     )
@@ -320,7 +320,7 @@ get_faust_cyt_pos <- function(dir_faust,
             combn_nm <- combn_nm_vec[i]
             # now just add to the correct column,
             # then bind to unstim and to get the unstim counts
-            combn_ind_pos <- outliergatev1:::.get_pos_ind_cyt_combn(
+            combn_ind_pos <- stimgate:::.get_pos_ind_cyt_combn(
               ex = ex, gate_tbl = gate_tbl_ind,
               chnl_pos = chnl_pos, chnl_neg = chnl_neg,
               chnl_alt = NULL,
@@ -329,7 +329,7 @@ get_faust_cyt_pos <- function(dir_faust,
             )
             ann_tbl_faust_pop[, combn_nm] <- combn_ind_pos
 
-            combn_ind_pos_uns <- outliergatev1:::.get_pos_ind_cyt_combn(
+            combn_ind_pos_uns <- stimgate:::.get_pos_ind_cyt_combn(
               ex = ex_uns, gate_tbl = gate_tbl_ind,
               chnl_pos = chnl_pos, chnl_neg = chnl_neg,
               chnl_alt = NULL,
